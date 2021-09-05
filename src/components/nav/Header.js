@@ -1,21 +1,29 @@
 import React , {useState} from "react";
 import { Menu } from 'antd';
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
+import { MailOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
+import {Link} from "react-router-dom";
 const { SubMenu } = Menu;
 
 const Header = () => {
-    const [current, setCurrent] = useState('');
-    const handleClick = () => {
-
+    const [current, setCurrent] = useState("home");
+    const handleClick = (e) => {
+        setCurrent(e.key);
     }
     return(
         <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
-        <Menu.Item key="mail" icon={<MailOutlined />}>
-          Navigation One
+        <Menu.Item key="home" icon={<MailOutlined />}>
+          <Link to="/">Home</Link>
         </Menu.Item>
-        <Menu.Item key="app" disabled icon={<AppstoreOutlined />}>
-          Navigation Two
+
+        <Menu.Item key="login" icon={<UserOutlined />} className="float-right">
+        <Link to="/login">Login</Link>
         </Menu.Item>
+
+        <Menu.Item key="register" icon={<UserOutlined />} className="float-right">
+        <Link to="/register">Register</Link>
+        </Menu.Item>
+
+
         <SubMenu key="SubMenu" icon={<SettingOutlined />} title="Navigation Three - Submenu">
           <Menu.ItemGroup title="Item 1">
             <Menu.Item key="setting:1">Option 1</Menu.Item>
