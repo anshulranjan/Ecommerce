@@ -1,6 +1,6 @@
 import React , {useState} from "react";
 import { Menu } from 'antd';
-import { MailOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
+import { MailOutlined, UserOutlined, SettingOutlined, ShoppingOutlined } from '@ant-design/icons';
 import {Link} from "react-router-dom";
 const { SubMenu } = Menu;
 
@@ -10,9 +10,9 @@ const Header = () => {
         setCurrent(e.key);
     }
     return(
-        <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
-        <Menu.Item key="home" icon={<MailOutlined />}>
-          <Link to="/">Home</Link>
+        <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal"> 
+        <Menu.Item key="home" icon={<ShoppingOutlined />}>
+          <Link to="/">ShopMe</Link>
         </Menu.Item>
 
         <Menu.Item key="login" icon={<UserOutlined />} className="float-right">
