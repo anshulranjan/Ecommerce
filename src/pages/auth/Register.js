@@ -3,19 +3,20 @@ import register from "./images.png";
 import { auth } from "../../firebase";
 import {Link} from "react-router-dom";
 import { sendSignInLinkToEmail } from "firebase/auth";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {toast } from 'react-toastify';
 
 const Register = () =>{
     const [email, setEmail] = useState("");
+    const [wait, setWait] = useState(false);
     const handleSubmit = async(e) =>{
         e.preventDefault();
+        setWait(true);
         const config = {
-            url:'http://localhost:3000/register/complete',
+            url:process.env.REACT_APP_REGISTER_REDIRECT_URL ,
             handleCodeInApp: true
         }
         await sendSignInLinkToEmail(auth, email, config)
-        toast.success('🦄 The signIn link has been sent to your mail Id. Please check your mail', {
+        toast.success(' Please check your email to complete the registration process', {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -26,12 +27,18 @@ const Register = () =>{
             });
         window.localStorage.setItem('emailForRegistration', email);
         setEmail("");
+        setWait(false);
     }
     const registerForm = () => (
         <>
         <form onSubmit={handleSubmit}>
             <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)} autoFocus placeholder="Enter your email id" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px"}}/>
-            <button type="submit" className="btn btn-primary mt-3">Register</button>
+            {!wait && (
+                <button type="submit" className="btn btn-primary mt-3">Register</button>
+            )}
+            {wait && (
+                <p className="btn btn-light mt-3">Please Wait..........</p>
+            )}
         </form>
         <Link to="/login" className="btn btn-warning mt-3">Existing User? Login</Link>
         </>
@@ -48,18 +55,6 @@ const Register = () =>{
 
                 <div className="col-md-4 offset-md-1">
                     <h1 className="p-2" style={{fontFamily:"Metropolis"}}>Register</h1>
-                    <ToastContainer
-                        position="top-right"
-                        autoClose={5000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                        />
-                    <ToastContainer />
                     {registerForm()}
                 </div>
             </div>
