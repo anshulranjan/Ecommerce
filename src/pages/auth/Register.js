@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import register from "./images.png";
+import register from "./register.png";
 import { auth } from "../../firebase";
 import {Link} from "react-router-dom";
 import { sendSignInLinkToEmail } from "firebase/auth";
@@ -37,7 +37,7 @@ const Register = () =>{
                 <button type="submit" className="btn btn-primary mt-3">Register</button>
             )}
             {wait && (
-                <p className="btn btn-light mt-3">Please Wait..........</p>
+                <p className="btn btn-light mt-3">Please Wait....</p>
             )}
         </form>
         <Link to="/login" className="btn btn-warning mt-3">Existing User? Login</Link>
