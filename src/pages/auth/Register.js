@@ -12,7 +12,7 @@ const Register = () =>{
         e.preventDefault();
         setWait(true);
         const config = {
-            url:process.env.REACT_APP_REGISTER_REDIRECT_URL ,
+            url: process.env.REACT_APP_REGISTER_REDIRECT_URL ,
             handleCodeInApp: true
         }
         await sendSignInLinkToEmail(auth, email, config)
