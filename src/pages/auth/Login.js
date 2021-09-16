@@ -2,10 +2,10 @@ import React,{useState} from "react";
 import register from "./register.png";
 import { auth } from "../../firebase";
 import {Link} from "react-router-dom";
-import { sendSignInLinkToEmail, signInWithEmailAndPassword } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import {toast } from 'react-toastify';
 import {Button} from "antd";
-import {LoginOutlined, LoadingOutlined } from '@ant-design/icons';
+import {LoginOutlined, LoadingOutlined, GoogleOutlined } from '@ant-design/icons';
 import { useDispatch } from "react-redux";
 
 const Login = (history) =>{
@@ -55,6 +55,35 @@ const Login = (history) =>{
             });
             setWait(false);
         }
+    };
+    const googleLogin = async () => {
+        const provider = new GoogleAuthProvider();
+        const auth = getAuth();
+        signInWithPopup(auth, provider)
+        .then(async (result) => {
+            const {user} = result;
+            const idTokenResult = await user.getIdTokenResult();
+            dispatch({
+                type: "LOGGED_IN_USE",
+                payload: {
+                  email: user.email,
+                  token: idTokenResult.token,
+                },
+            })
+            history.push("/");
+          })
+          .catch((error) =>
+          {
+            toast.error(error.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+          });
     }
     const loginForm = () => (
         <>
@@ -86,6 +115,16 @@ const Login = (history) =>{
             Please Wait...</Button>
             )}
         </form>
+        <Button 
+                    onClick={googleLogin}
+                    type="danger"
+                    shape="round"
+                    className = "mt-3"
+                    block
+                    icon = {<GoogleOutlined />}
+                    size="large"
+                >
+                Login with Google</Button>
         <Button 
                 type="primary"
                 style={{ background: "#e9af29", borderColor: "#e9af29" }}
