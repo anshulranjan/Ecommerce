@@ -2,6 +2,8 @@ import React,{useState, useEffect} from "react";
 import register from "./register.png";
 import { auth } from "../../firebase";
 import {Link} from "react-router-dom";
+import {Button} from "antd";
+import { MailOutlined, LoadingOutlined } from '@ant-design/icons';
 import { getAuth, isSignInWithEmailLink, updatePassword, signInWithEmailLink } from "firebase/auth";
 import {toast } from 'react-toastify';
 
@@ -94,13 +96,36 @@ const RegisterComplete = ({history}) =>{
             <input type="password" className="form-control mt-3" value={password} onChange={e => setPassword(e.target.value)} autoFocus placeholder="Enter your password" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px"}}/>
 
             {!wait && (
-                <button type="submit" className="btn btn-primary mt-3">Complete Registration</button>
+                    <Button 
+                    onClick={handleSubmit}
+                    type="primary"
+                    shape="round"
+                    className = "mt-3"
+                    block
+                    icon = {<MailOutlined />}
+                    size="large"
+                >Complete Registration </Button>
             )}
             {wait && (
-                <p className="btn btn-light mt-3">Please Wait....</p>
-            )}
+                <Button 
+                type="primary"
+                shape="round"
+                className = "mt-3"
+                block
+                icon = {<LoadingOutlined />}
+                size="large"
+                >
+                Please Wait....</Button>            )}
         </form>
-        <Link to="/login" className="btn btn-warning mt-3">Existing User? Login</Link>
+        <Button 
+                type="primary"
+                style={{ background: "#e9af29", borderColor: "#e9af29" }}
+                shape="round"
+                className = "mt-3"
+                block
+                size="large"
+                >
+                <Link to="/login">Existing User? Login</Link></Button>
         </>
         
     );

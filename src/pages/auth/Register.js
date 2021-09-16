@@ -4,12 +4,27 @@ import { auth } from "../../firebase";
 import {Link} from "react-router-dom";
 import { sendSignInLinkToEmail } from "firebase/auth";
 import {toast } from 'react-toastify';
+import {Button} from "antd";
+import { MailOutlined, LoadingOutlined } from '@ant-design/icons';
 
 const Register = () =>{
     const [email, setEmail] = useState("");
     const [wait, setWait] = useState(false);
     const handleSubmit = async(e) =>{
         e.preventDefault();
+        if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)))
+        {
+            toast.error('Invalid Email', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return;
+        }
         setWait(true);
         const config = {
             url: process.env.REACT_APP_REGISTER_REDIRECT_URL ,
@@ -34,13 +49,39 @@ const Register = () =>{
         <form onSubmit={handleSubmit}>
             <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)} autoFocus placeholder="Enter your email id" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px"}}/>
             {!wait && (
-                <button type="submit" className="btn btn-primary mt-3">Register</button>
+                <Button 
+                onClick={handleSubmit}
+                type="primary"
+                shape="round"
+                className = "mt-3"
+                block
+                icon = {<MailOutlined />}
+                size="large"
+                disabled = {!email}
+            >
+            Register</Button>
             )}
             {wait && (
-                <p className="btn btn-light mt-3">Please Wait....</p>
+                <Button 
+                type="primary"
+                shape="round"
+                className = "mt-3"
+                block
+                icon = {<LoadingOutlined />}
+                size="large"
+                >
+                Please Wait....</Button>
             )}
         </form>
-        <Link to="/login" className="btn btn-warning mt-3">Existing User? Login</Link>
+        <Button 
+                type="primary"
+                style={{ background: "#e9af29", borderColor: "#e9af29" }}
+                shape="round"
+                className = "mt-3"
+                block
+                size="large"
+                >
+                <Link to="/login">Existing User? Login</Link></Button>
         </>
         
     );
