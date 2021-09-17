@@ -81,9 +81,8 @@ const Register = () =>{
                 block
                 size="large"
                 >
-                <Link to="/login">Existing User? Login</Link></Button>
+                <a href="/login">Existing User? Login</a></Button>
         </>
-        
     );
     return(
         <div className="container p-5">

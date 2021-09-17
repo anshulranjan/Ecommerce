@@ -9,7 +9,9 @@ import { useHistory } from "react-router-dom";
 const { SubMenu } = Menu;
 
 const Header = () => {
-    const [current, setCurrent] = useState("home");
+    const a = window.location.href.split(process.env.REACT_APP_URL)[1]
+    console.log(a);
+    const [current, setCurrent] = useState(a);
     let dispatch = useDispatch();
     let {user} = useSelector((state) => ({...state}))
     let history = useHistory();
@@ -27,17 +29,17 @@ const Header = () => {
     }
     return(
         <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal"> 
-        <Menu.Item key="home" icon={<ShoppingOutlined />}>
+        <Menu.Item key="/" icon={<ShoppingOutlined />}>
           <Link to="/">ShopMe</Link>
         </Menu.Item>
         {!user && (
-          <Menu.Item key="login" icon={<UserOutlined />} className="float-right">
+          <Menu.Item key="/login" icon={<UserOutlined />} className="float-right">
           <Link to="/login">Login</Link>
           </Menu.Item>
         )}
 
         {!user && (
-          <Menu.Item key="register" icon={<UserOutlined />} className="float-right">
+          <Menu.Item key="/register" icon={<UserOutlined />} className="float-right">
           <Link to="/register">Register</Link>
           </Menu.Item>
         )}
