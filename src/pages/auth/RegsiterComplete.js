@@ -138,7 +138,7 @@ const RegisterComplete = ({history}) =>{
                     <img src={register} style={{width:"60%"}} className= "mt-5 ml-2" />
                 </div>
 
-                <div className="col-xs-12 col-sm-8 col-md-4 p-5 offset-md-1">
+                <div className="col-xs-12 col-sm-8 col-md-6 p-5 offset-md-1">
                     <h1 className="p-2" style={{fontFamily:"Metropolis"}}>Complete Your Registration</h1>
                     {completeRegisterForm()}
                 </div>

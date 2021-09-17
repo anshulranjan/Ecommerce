@@ -8,6 +8,7 @@ import Register from './pages/auth/Register';
 import Home from './pages/Home';
 import Header from './components/nav/Header';
 import RegisterComplete from './pages/auth/RegsiterComplete';
+import ForgotPassword from './pages/auth/ForgotPassword';
 import {auth} from "./firebase";
 import {useDispatch} from "react-redux";
 const App = () => {
@@ -49,6 +50,7 @@ const App = () => {
       <Route exact path="/login" component={Login}></Route>
       <Route exact path="/register" component={Register}></Route>
       <Route exact path="/register/complete" component={RegisterComplete}></Route>
+      <Route exact path="/forgot/password" component={ForgotPassword}></Route>
     </Switch>
     </>
   );

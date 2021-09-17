@@ -34,7 +34,7 @@ const Login = ({history}) =>{
             const {user} = result;
             const idTokenResult = await user.getIdTokenResult();
             dispatch({
-                type: "LOGGED_IN_USE",
+                type: "LOGGED_IN_USER",
                 payload: {
                   email: user.email,
                   token: idTokenResult.token,
@@ -44,6 +44,7 @@ const Login = ({history}) =>{
         }
         catch(error){
             console.log(error);
+            setWait(false);
             toast.error(error.message, {
                 position: "top-right",
                 autoClose: 5000,
@@ -53,7 +54,6 @@ const Login = ({history}) =>{
                 draggable: true,
                 progress: undefined,
             });
-            setWait(false);
         }
     };
     const googleLogin = async () => {
@@ -119,6 +119,7 @@ const Login = ({history}) =>{
         <form onSubmit={handleSubmit}>
             <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)} autoFocus placeholder="Enter your email id" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px"}}/>
             <input type="password" className="form-control mt-3" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px"}}/>
+            <Link to="/forgot/password" className="float-right text-danger mt-2">Forgot your Password?</Link>
             {!wait && (
                 <Button 
                     onClick={handleSubmit}
@@ -184,7 +185,7 @@ const Login = ({history}) =>{
                     <img src={register} style={{width:"60%"}} className= "mt-5 ml-2" />
                 </div>
 
-                <div className="col-xs-12 col-sm-8 col-md-4 p-5 offset-md-1">
+                <div className="col-xs-12 col-sm-8 col-md-6 p-5 offset-md-1">
                     <h1 className="p-2" style={{fontFamily:"Metropolis"}}>Login</h1>
                     {loginForm()}
                 </div>
