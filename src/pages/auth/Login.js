@@ -8,7 +8,7 @@ import {Button} from "antd";
 import {LoginOutlined, LoadingOutlined, GoogleOutlined } from '@ant-design/icons';
 import { useDispatch } from "react-redux";
 
-const Login = (history) =>{
+const Login = ({history}) =>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [wait, setWait] = useState(false);

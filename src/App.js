@@ -15,19 +15,21 @@ const App = () => {
   //check firebase auth state
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if(user)
-      {
+      if (user) {
         const idTokenResult = await user.getIdTokenResult();
+        console.log("user", user);
         dispatch({
-          type: "LOGGED_IN_USE",
+          type: "LOGGED_IN_USER",
           payload: {
             email: user.email,
             token: idTokenResult.token,
           },
-        })
+        });
       }
-    })
-  })
+    });
+    // cleanup
+    return () => unsubscribe();
+  }, []);
   return (
     <>
     <Header />
