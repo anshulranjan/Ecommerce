@@ -11,6 +11,10 @@ import { MailOutlined, LoadingOutlined } from '@ant-design/icons';
 const ForgotPassword = ({history}) =>{
     const [email, setEmail] = useState("");
     const [wait, setWait] = useState(false);
+    const {user} = useSelector((state) => ({...state}))
+    useEffect(() => {
+        if(user && user.token) history.push("/")
+    }, [user] );
     const handleSubmit = async(e) =>{
         e.preventDefault();
         if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)))
