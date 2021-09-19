@@ -5,12 +5,16 @@ import {Link} from "react-router-dom";
 import {Button} from "antd";
 import { MailOutlined, LoadingOutlined } from '@ant-design/icons';
 import { getAuth, isSignInWithEmailLink, updatePassword, signInWithEmailLink } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
 import {toast } from 'react-toastify';
+import { createOrUpdateUser } from "../../functions/auth";
 
 const RegisterComplete = ({history}) =>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [wait, setWait] = useState(false);
+    const {user} = useSelector((state) => ({...state}))
+    let dispatch = useDispatch();
 
     useState(() => {
         setEmail(window.localStorage.getItem("emailForRegistration"))
@@ -70,6 +74,20 @@ const RegisterComplete = ({history}) =>{
                 let user = auth.currentUser;
                 await updatePassword(user, password);
                 const idTokenResult = await user.getIdTokenResult();
+                createOrUpdateUser(idTokenResult.token)
+                .then((res) => {
+                    dispatch({
+                        type: "LOGGED_IN_USE",
+                        payload: {
+                            name: res.data.name,
+                            email: res.data.email,
+                            token: idTokenResult.token,
+                            role: res.data.role,
+                            _id: res.data._id,
+                        },
+                    });
+                })
+                .catch();
                 history.push('/');
 
             }

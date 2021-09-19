@@ -7,14 +7,7 @@ import {toast } from 'react-toastify';
 import {Button} from "antd";
 import {LoginOutlined, LoadingOutlined, GoogleOutlined, FacebookFilled } from '@ant-design/icons';
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-const createOrUpdateUser = async(authtoken) => {
-    return axios.post(`${process.env.REACT_APP_API}/create-update-user`, {}, {
-        headers:{
-            authtoken : authtoken,
-        }
-    });
-}
+import { createOrUpdateUser } from "../../functions/auth";
 
 const Login = ({history}) =>{
     const [email, setEmail] = useState("");
@@ -45,15 +38,20 @@ const Login = ({history}) =>{
             const result = await signInWithEmailAndPassword(auth, email, password);
             const {user} = result;
             const idTokenResult = await user.getIdTokenResult();
-            createOrUpdateUser(idTokenResult)
-            dispatch({
+            createOrUpdateUser(idTokenResult.token)
+            .then((res) => {
+                dispatch({
                 type: "LOGGED_IN_USER",
                 payload: {
-                  email: user.email,
-                  token: idTokenResult.token,
+                name: res.data.name,
+                email: res.data.email,
+                token: idTokenResult.token,
+                role: res.data.role,
+                _id: res.data._id,
                 },
+            });
             })
-            history.push("/");
+            .catch();
         }
         catch(error){
             console.log(error);
@@ -76,14 +74,20 @@ const Login = ({history}) =>{
         .then(async (result) => {
             const {user} = result;
             const idTokenResult = await user.getIdTokenResult();
-            createOrUpdateUser(idTokenResult)
-            dispatch({
-                type: "LOGGED_IN_USE",
-                payload: {
-                  email: user.email,
-                  token: idTokenResult.token,
-                },
+            createOrUpdateUser(idTokenResult.token)
+            .then((res) => {
+                dispatch({
+                    type: "LOGGED_IN_USE",
+                    payload: {
+                        name: res.data.name,
+                        email: res.data.email,
+                        token: idTokenResult.token,
+                        role: res.data.role,
+                        _id: res.data._id,
+                    },
+                });
             })
+            .catch();
             history.push("/");
           })
           .catch((error) =>
