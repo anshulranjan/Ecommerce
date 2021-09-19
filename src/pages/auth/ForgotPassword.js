@@ -99,7 +99,7 @@ const ForgotPassword = ({history}) =>{
                 block
                 size="large"
                 >
-                <a href="/login">Existing User? Login</a></Button>
+                <a href="/login">Remembered Your Password? Login</a></Button>
         </>
     );
     return(

@@ -7,6 +7,14 @@ import {toast } from 'react-toastify';
 import {Button} from "antd";
 import {LoginOutlined, LoadingOutlined, GoogleOutlined, FacebookFilled } from '@ant-design/icons';
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+const createOrUpdateUser = async(authtoken) => {
+    return axios.post(`${process.env.REACT_APP_API}/create-update-user`, {}, {
+        headers:{
+            authtoken : authtoken,
+        }
+    });
+}
 
 const Login = ({history}) =>{
     const [email, setEmail] = useState("");
@@ -37,6 +45,7 @@ const Login = ({history}) =>{
             const result = await signInWithEmailAndPassword(auth, email, password);
             const {user} = result;
             const idTokenResult = await user.getIdTokenResult();
+            createOrUpdateUser(idTokenResult)
             dispatch({
                 type: "LOGGED_IN_USER",
                 payload: {
@@ -67,6 +76,7 @@ const Login = ({history}) =>{
         .then(async (result) => {
             const {user} = result;
             const idTokenResult = await user.getIdTokenResult();
+            createOrUpdateUser(idTokenResult)
             dispatch({
                 type: "LOGGED_IN_USE",
                 payload: {
