@@ -18,7 +18,7 @@ const RegisterComplete = ({history}) =>{
 
     useState(() => {
         setEmail(window.localStorage.getItem("emailForRegistration"))
-    },[]);
+    },[history]);
 
     const handleSubmit = async(e) =>{
         e.preventDefault();

@@ -6,7 +6,7 @@ import LoadingToRedirect from "./LoadingToRedirect";
 const UserRoute = ({childern, ...rest}) => {
     const {user} = useSelector((state) => ({...state}));
     return user && user.token ? (
-    <Route {...rest} render={() => childern} /> 
+    <Route {...rest} /> 
     ):(
         <LoadingToRedirect />
     );
