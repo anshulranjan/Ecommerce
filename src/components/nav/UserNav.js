@@ -1,7 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card } from 'antd';
-import {HistoryOutlined } from '@ant-design/icons';
 
 const UserNav = () => {
     return(

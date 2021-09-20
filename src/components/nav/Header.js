@@ -1,8 +1,7 @@
 import React , {useState} from "react";
 import { Menu} from 'antd';
-import { MailOutlined, UserOutlined, SettingOutlined, ShoppingOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, ShoppingOutlined, LogoutOutlined } from '@ant-design/icons';
 import {Link} from "react-router-dom";
-import { FirebaseError } from "firebase/app";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -10,7 +9,6 @@ const { SubMenu } = Menu;
 
 const Header = () => {
     const a = window.location.href.split(process.env.REACT_APP_URL)[1]
-    console.log(a);
     const [current, setCurrent] = useState(a);
     let dispatch = useDispatch();
     let {user} = useSelector((state) => ({...state}))

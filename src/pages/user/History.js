@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import UserNav from "../../components/nav/UserNav";
 const History = () => {
     return(

@@ -1,7 +1,6 @@
 import React,{useState, useEffect} from "react";
 import register from "./register.png";
 import { auth } from "../../firebase";
-import {Link} from "react-router-dom";
 import {toast } from 'react-toastify';
 import { sendPasswordResetEmail } from "@firebase/auth";
 import {Button} from "antd";
@@ -14,7 +13,7 @@ const ForgotPassword = ({history}) =>{
     const {user} = useSelector((state) => ({...state}))
     useEffect(() => {
         if(user && user.token) history.push("/")
-    }, [user] );
+    }, [user, history] );
     const handleSubmit = async(e) =>{
         e.preventDefault();
         if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)))
@@ -108,7 +107,7 @@ const ForgotPassword = ({history}) =>{
                 <div className="col-xs-12 col-sm-8 col-md-4 p-5 column-margin" style={{backgroundColor:"#096dd9"}}>
                     <h2 style={{color:"white"}}>Relax!! Its easy to reset Password </h2>
                     <h6 style={{color:"#d9d9d9"}}>Follow the steps and reset your password within minutes. </h6>
-                    <img src={register} style={{width:"60%"}} className= "mt-5 ml-2" />
+                    <img src={register} alt="" style={{width:"60%"}} className= "mt-5 ml-2" />
                 </div>
 
                 <div className="col-xs-12 col-sm-8 col-md-6 p-5 offset-md-1">

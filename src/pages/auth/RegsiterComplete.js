@@ -1,11 +1,11 @@
-import React,{useState, useEffect} from "react";
+import React,{useState} from "react";
 import register from "./register.png";
 import { auth } from "../../firebase";
 import {Link} from "react-router-dom";
 import {Button} from "antd";
 import { MailOutlined, LoadingOutlined } from '@ant-design/icons';
-import { getAuth, isSignInWithEmailLink, updatePassword, signInWithEmailLink } from "firebase/auth";
-import { useDispatch, useSelector } from "react-redux";
+import {updatePassword, signInWithEmailLink } from "firebase/auth";
+import { useDispatch } from "react-redux";
 import {toast } from 'react-toastify';
 import { createOrUpdateUser } from "../../functions/auth";
 
@@ -13,7 +13,6 @@ const RegisterComplete = ({history}) =>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [wait, setWait] = useState(false);
-    const {user} = useSelector((state) => ({...state}))
     let dispatch = useDispatch();
 
     useState(() => {
@@ -153,7 +152,7 @@ const RegisterComplete = ({history}) =>{
                 <div className="col-xs-12 col-sm-8 col-md-4 p-5 column-margin" style={{backgroundColor:"#096dd9"}}>
                     <h2 style={{color:"white"}}>Looks like you are new here!</h2>
                     <h6 style={{color:"#d9d9d9"}}>Sign up with your email id to get started </h6>
-                    <img src={register} style={{width:"60%"}} className= "mt-5 ml-2" />
+                    <img src={register} alt = "" style={{width:"60%"}} className= "mt-5 ml-2" />
                 </div>
 
                 <div className="col-xs-12 col-sm-8 col-md-6 p-5 offset-md-1">

@@ -1,7 +1,6 @@
 import React,{useState, useEffect} from "react";
 import register from "./register.png";
 import { auth } from "../../firebase";
-import {Link} from "react-router-dom";
 import { sendSignInLinkToEmail } from "firebase/auth";
 import {toast } from 'react-toastify';
 import {Button} from "antd";
@@ -95,7 +94,7 @@ const Register = ({history}) =>{
                 <div className="col-xs-12 col-sm-8 col-md-4 p-5 column-margin" style={{backgroundColor:"#096dd9"}}>
                     <h2 style={{color:"white"}}>Looks like you are new here!</h2>
                     <h6 style={{color:"#d9d9d9"}}>Sign up with your email id to get started </h6>
-                    <img src={register} style={{width:"60%"}} className= "mt-5 ml-2" />
+                    <img src={register} alt="" style={{width:"60%"}} className= "mt-5 ml-2" />
                 </div>
 
                 <div className="col-xs-12 col-sm-8 col-md-6 p-5 offset-md-1">
