@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import UserNav from "../../components/nav/UserNav";
-const History = () => {
+const Wishlist = () => {
     return(
     <div style={{backgroundColor:"#F5F5F5", height:"100%"}}>
     <div className="container fluid">
@@ -15,4 +15,4 @@ const History = () => {
     )
 
 }
-export default History;
+export default Wishlist;

@@ -41,3 +41,59 @@
     margin: 2px 0;
   }
 }
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500');
+
+
+/* Toggle Styles */
+
+#viewport {
+  padding-left: 250px;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+#content {
+  width: 100%;
+  position: relative;
+  margin-right: 0;
+}
+
+/* Sidebar Styles */
+
+#sidebar {
+  z-index: 1000;
+  position: fixed;
+  left: 250px;
+  width: 250px;
+  height: 100%;
+  margin-left: -250px;
+  overflow-y: auto;
+  background: #f0f0f0;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+#sidebar .nav{
+  
+}
+
+#sidebar .nav a{
+  font-size: 18px;
+  background: none;
+  color: #6e6c6c;
+  padding: 16px 24px;
+  font-family: sans-serif;
+}
+
+#sidebar .nav a:hover{
+  background: none;
+  color: #079bfd;
+}
+
+#sidebar .nav a i{
+  margin-right: 16px;
+}
