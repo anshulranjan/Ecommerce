@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import UserNav from "../../components/nav/UserNav";
 import { auth } from "../../firebase";
-import { getAuth, updatePassword } from "firebase/auth";
+import { updatePassword } from "firebase/auth";
 import {toast} from "react-toastify";
-import { Card } from 'antd';
 import {Button} from "antd";
+import { Input } from 'antd';
 import {LoginOutlined, LoadingOutlined} from '@ant-design/icons';
 const Password = () => {
     const [password, setPassword] = useState("");
@@ -45,8 +45,9 @@ const Password = () => {
     }
     const passwordUpdateForm = () => (
         <>
-        <form onSubmit={handleSubmit} className="float-centre">
-            <input type="password" className="form-control mt-3" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter new password" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px", width:"50%"}}/>
+        <form onSubmit={handleSubmit}>
+            <Input.Password className="mt-3 mb-3" autoFocus value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter new password" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px", width:"50%"}}/>
+            <br />
             {!wait && (
                 <Button 
                     onClick={handleSubmit}
