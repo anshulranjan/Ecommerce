@@ -17,6 +17,15 @@ const Login = ({history}) =>{
     useEffect(() => {
         if(user && user.token) history.push("/")
     }, [user] );
+    const roleBasedRedirect = (res) => {
+        if(res.data.role === "admin")
+        {
+            history.push('/admin/dashboard');
+        }
+        else{
+            history.push("/user/history")
+        }
+    }
     let dispatch = useDispatch();
     const handleSubmit = async(e) =>{
         e.preventDefault();
@@ -50,6 +59,7 @@ const Login = ({history}) =>{
                 _id: res.data._id,
                 },
             });
+            roleBasedRedirect(res);
             })
             .catch(err => console.log(err));
         }
@@ -86,9 +96,10 @@ const Login = ({history}) =>{
                         _id: res.data._id,
                     },
                 });
+                roleBasedRedirect(res);
             })
             .catch(err => console.log(err));
-            history.push("/");
+            //history.push("/");
           })
           .catch((error) =>
           {
