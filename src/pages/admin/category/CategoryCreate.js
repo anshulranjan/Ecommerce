@@ -12,6 +12,7 @@ const { Meta } = Card;
 
 const CategoryCreate = () => {
     const [name, setName] = useState("");
+    const [search, setSearch] = useState("");
     const [wait, setWait] = useState(false);
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState([]);
@@ -114,6 +115,16 @@ const CategoryCreate = () => {
         })
 
     }
+
+
+    //searchcategories
+    const handleSearchChange = (e) => {
+        e.preventDefault();
+        setSearch(e.target.value.toLowerCase());
+    }
+    const searched = (search) => (c) => c.name.toLowerCase().includes(search);
+
+    //category form
     const categoryForm = () => (
         <>
         <form onSubmit={handleSubmit}>
@@ -148,6 +159,11 @@ const CategoryCreate = () => {
         </form>
         </>
     )
+    const searchCategory = () =>(
+        <div className="container-fluid ml-4">
+            <Input className="mt-3 mb-3" autoFocus value={search} onChange={handleSearchChange} placeholder="Search categories" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px", width:"30%"}}/>
+        </div>
+    )
     return(
         <div id="viewport">
             <AdminNav />
@@ -158,8 +174,9 @@ const CategoryCreate = () => {
                 < hr />
                 </div>
                 <div className="container">
+                    {searchCategory()}
                     <div className="row">
-                    {categories.map((c) => (
+                    {categories.filter(searched(search)).map((c) => (
                         <div key={c._id} className="ml-5"> 
                         <Card
                             style={{ width: 300, marginTop: 16 }}
