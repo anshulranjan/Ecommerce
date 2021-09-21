@@ -34,7 +34,7 @@ const CategoryCreate = () => {
         {
             removeCategory(slug, user.token)
             .then(res => {
-                toast.success(`"${res.data.name}" deleted successfully`, {
+                toast.error(`"${res.data.name}" deleted successfully`, {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
