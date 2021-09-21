@@ -83,7 +83,6 @@ const CategoryCreate = () => {
         setWait(true);
         createCategory({name}, user.token)
         .then(res => {
-            console.log(res);
             setWait(false);
             setName("");
             toast.success(`"${res.data.name}" created successfully`, {

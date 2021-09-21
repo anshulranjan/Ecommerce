@@ -1,6 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+const isActive = (path) => {
+    if(window.location.href.split(process.env.REACT_APP_URL)[1] === path)
+    {
+        return {color:"#079bfd"};
+    }
+}
 const AdminNav = () => {
     return(
         <div id="sidebar">
@@ -21,7 +26,7 @@ const AdminNav = () => {
                  Products
                 </Link>
             </li>
-            <li className="mt-3" style={{fontFamily:"BlinkMacSystemFont", fontSize:"25px"}} >
+            <li className="mt-3" style = {isActive("/admin/category")} >
                 <Link to="/admin/category">
                  Category
                 </Link>
