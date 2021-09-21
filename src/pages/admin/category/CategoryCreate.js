@@ -160,9 +160,9 @@ const CategoryCreate = () => {
         </>
     )
     const searchCategory = () =>(
-        <div className="container-fluid ml-4">
-            <Input className="mt-3 mb-3" autoFocus value={search} onChange={handleSearchChange} placeholder="Search categories" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px", width:"30%"}}/>
-        </div>
+        <>
+            <Input className="mt-3 mb-3" autoFocus value={search} onChange={handleSearchChange} placeholder="Search categories" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px", width:"25%"}}/>
+        </>
     )
     return(
         <div id="viewport">
@@ -171,10 +171,12 @@ const CategoryCreate = () => {
                 <div className="container-fluid text-center">
                 <h1 className="p-3" style={{fontFamily:"Metropolis"}}>Create Category</h1>
                 {categoryForm()}
-                < hr />
+                <br/>
                 </div>
                 <div className="container">
-                    {searchCategory()}
+                    <div className="row ml-5">
+                        {searchCategory()}
+                    </div>
                     <div className="row">
                     {categories.filter(searched(search)).map((c) => (
                         <div key={c._id} className="ml-5"> 
