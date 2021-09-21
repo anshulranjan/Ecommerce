@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 const isActive = (path) => {
     if(window.location.href.split(process.env.REACT_APP_URL)[1] === path)
     {
-        console.log("hello");
         return {backgroundColor:"#d9d9d9"};
     }
 }

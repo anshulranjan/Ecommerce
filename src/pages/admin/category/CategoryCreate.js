@@ -160,7 +160,7 @@ const CategoryCreate = () => {
                 <div className="container">
                     <div className="row">
                     {categories.map((c) => (
-                        <div key={c._id} className="col-sm"> 
+                        <div key={c._id} className="ml-5"> 
                         <Card
                             style={{ width: 300, marginTop: 16 }}
                             actions={[
