@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Input, Form, InputNumber, Select } from 'antd';
 import {RightOutlined, LoadingOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import {Button} from "antd";
-import { createCategory, getCategories, removeCategory } from "../../../functions/category";
+import {getCategories } from "../../../functions/category";
 import { createProduct } from "../../../functions/product";
 import SweetAlert from 'sweetalert-react';
 const initState = {
@@ -38,6 +38,16 @@ const ProductCreate = () => {
     const [color, setColor] = useState("");
     const [shipping, setShipping] = useState("");
     const {user} = useSelector((state) => ({...state}));
+
+    //load all categories
+    useEffect(() => {
+        loadCategories();
+    }, []);
+
+    const loadCategories = () => {
+        getCategories()
+        .then(c => setValues({ ...values, categories: c.data }));
+    }
     
    const handleSubmit = (e) => {
        e.preventDefault();
@@ -65,15 +75,18 @@ const ProductCreate = () => {
     })
    }
 
-   const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
-  const onSelectColor = (value) => {
-    setColor(value);
-}
-const onSelectShipping = (value) => {
-    setShipping(value);
-}
+    const handleChange = (e) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
+    };
+    const onSelectColor = (value) => {
+        setColor(value);
+    }
+    const onSelectShipping = (value) => {
+        setShipping(value);
+    }
+    const onSelectCategory = (value) => {
+        setValues({ ...values, category: value });
+    }
 
     //category form
     const productForm = () => (
@@ -118,6 +131,28 @@ const onSelectShipping = (value) => {
             >
             <Input name="price" placeholder="Enter the Product Price" value={price}
                 onChange = {handleChange}/>
+            </Form.Item>
+
+            <Form.Item
+                name="category"
+                label="Category"
+                className="ml-5"
+                rules={[
+                {
+                    required: true,
+                },
+                ]}
+            >
+                <Select 
+                    placeholder="Please select the category"
+                    value={category}
+                    name="category"
+                    onChange = {onSelectCategory}
+                >
+                {categories.length>0 && categories.map((c) => (
+                        <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
+                    ))}
+                </Select>
             </Form.Item>
 
             <Form.Item
