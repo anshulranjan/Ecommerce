@@ -179,7 +179,7 @@ const CategoryCreate = () => {
                     </div>
                     <div className="row">
                     {categories.filter(searched(search)).map((c) => (
-                        <div key={c._id} className="ml-5"> 
+                        <div key={c._id} className="ml-5 mb-2"> 
                         <Card
                             style={{ width: 300, marginTop: 16 }}
                             actions={[

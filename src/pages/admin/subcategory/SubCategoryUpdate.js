@@ -168,7 +168,7 @@ const SubCategoryUpdate = ({history, match}) => {
             <AdminNav />
             <div id="content">
                 <div className="container-fluid text-center">
-                <h1 className="p-3" style={{fontFamily:"Metropolis"}}>Update SubCategory</h1>
+                <h1 className="p-3" style={{fontFamily:"Metropolis"}}>Update Sub Category</h1>
                 {subcategoryForm()}
                 <br/>
                 </div>

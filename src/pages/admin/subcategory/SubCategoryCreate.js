@@ -216,8 +216,32 @@ const SubCategoryCreate = () => {
     //searchform
     const searchCategory = () =>(
         <>
-            <Input className="mt-3 mb-3" autoFocus value={search} onChange={handleSearchChange} placeholder="Search the Subcategories" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px", width:"25%"}}/>
-        </>
+            <div className="row">
+                <div className="col">
+                <Select
+                    showSearch
+                    style={{ width: "50%" }}
+                    placeholder="Search by category"
+                    optionFilterProp="children"
+                    size = "large"
+                    className="mt-3 mb-3"
+                    onChange={onSelectCategory}
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                >
+                    {categories.length>0 && categories.map((c) => (
+                        <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
+                    ))}
+                </Select>
+
+                </div>
+                <div className="col">
+                    <Input className="mt-3 mb-3" autoFocus value={search} onChange={handleSearchChange} placeholder="Search by subcategory name" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px", width:"50%"}}/>
+                </div>
+            </div>
+            <br />
+            </>
     )
 
     return(
@@ -225,17 +249,15 @@ const SubCategoryCreate = () => {
             <AdminNav />
             <div id="content">
                 <div className="container-fluid text-center">
-                <h1 className="p-3" style={{fontFamily:"Metropolis"}}>Create SubCategory</h1>
+                <h1 className="p-3" style={{fontFamily:"Metropolis"}}>Create Sub Category</h1>
                 {subcategoryForm()}
                 <br/>
+                {searchCategory()}
                 </div>
                 <div className="container">
-                    <div className="row ml-5">
-                        {searchCategory()}
-                    </div>
                     <div className="row">
                     {subcategories.filter(searched(search)).map((c) => (
-                        <div key={c._id} className="ml-5"> 
+                        <div key={c._id} className="ml-5 mb-2"> 
                         <Card
                             style={{ width: 300, marginTop: 16 }}
                             actions={[
