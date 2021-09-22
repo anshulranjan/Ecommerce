@@ -22,6 +22,7 @@ import CategoryCreate from './pages/admin/category/CategoryCreate';
 import CategoryUpdate from './pages/admin/category/CategoryUpdate';
 import SubCategoryCreate from './pages/admin/subcategory/SubCategoryCreate';
 import SubCategoryUpdate from './pages/admin/subcategory/SubCategoryUpdate';
+import ProductCreate from './pages/admin/product/ProductCreate';
 const App = () => {
   const dispatch = useDispatch();
 
@@ -77,6 +78,7 @@ const App = () => {
       <AdminRoute exact path="/admin/dashboard" component={AdminDashboard}></AdminRoute>
       <AdminRoute exact path="/admin/category" component={CategoryCreate}></AdminRoute>
       <AdminRoute exact path="/admin/sub" component={SubCategoryCreate}></AdminRoute>
+      <AdminRoute exact path="/admin/product" component={ProductCreate}></AdminRoute>
       <AdminRoute exact path="/admin/category/:slug" component={CategoryUpdate}></AdminRoute>
       <AdminRoute exact path="/admin/subcategory/:slug" component={SubCategoryUpdate}></AdminRoute>
 
