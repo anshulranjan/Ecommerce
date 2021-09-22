@@ -8,6 +8,7 @@ import {RightOutlined, LoadingOutlined, EditOutlined, DeleteOutlined} from '@ant
 import {Button} from "antd";
 import { createCategory, getCategories, removeCategory } from "../../../functions/category";
 import { createProduct } from "../../../functions/product";
+import SweetAlert from 'sweetalert-react';
 const initState = {
     title:'',
     description:'',
@@ -44,12 +45,14 @@ const ProductCreate = () => {
        createProduct({values, color, shipping},user.token)
        .then(res=>{
            console.log(res)
+           setWait(false);
+           window.alert(`${res.data.title} is created`);
+           window.location.reload();
            
        })
        .catch(err => {
         setWait(false);
-        if(err.response.status === 400){
-            toast.error(err.response.data, {
+            toast.error(err.response.data.err, {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -58,7 +61,6 @@ const ProductCreate = () => {
                 draggable: true,
                 progress: undefined,
             });
-        }
 
     })
    }
@@ -72,9 +74,6 @@ const ProductCreate = () => {
 const onSelectShipping = (value) => {
     setShipping(value);
 }
-  const handleChange11 = (e) => {
-      console.log(e.target.value)
-  }
 
     //category form
     const productForm = () => (
