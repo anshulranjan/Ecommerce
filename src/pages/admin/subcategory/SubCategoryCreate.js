@@ -121,7 +121,6 @@ const SubCategoryCreate = () => {
             setLoading(true);
             loadCategories();
             loadSubCategories();
-            setCategory("");
         })
         .catch(err => {
             setWait(false);

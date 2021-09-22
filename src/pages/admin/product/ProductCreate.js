@@ -3,12 +3,11 @@ import AdminNav from "../../../components/nav/AdminNav";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import { Link } from "react-router-dom";
-import { Input, Form, InputNumber, Select } from 'antd';
-import {RightOutlined, LoadingOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
+import { Input, Form, Select } from 'antd';
+import {RightOutlined, LoadingOutlined} from '@ant-design/icons';
 import {Button} from "antd";
-import {getCategories } from "../../../functions/category";
+import {getCategories, getCategoriesSub } from "../../../functions/category";
 import { createProduct } from "../../../functions/product";
-import SweetAlert from 'sweetalert-react';
 const initState = {
     title:'',
     description:'',
@@ -37,6 +36,7 @@ const ProductCreate = () => {
     const { Option } = Select;
     const [color, setColor] = useState("");
     const [shipping, setShipping] = useState("");
+    const [subsOptions, setSubOptions] = useState([]);
     const {user} = useSelector((state) => ({...state}));
 
     //load all categories
@@ -74,7 +74,7 @@ const ProductCreate = () => {
 
     })
    }
-
+   //handle methods from form
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
@@ -86,6 +86,13 @@ const ProductCreate = () => {
     }
     const onSelectCategory = (value) => {
         setValues({ ...values, category: value });
+        getCategoriesSub(value)
+        .then(res =>{
+            setSubOptions(res.data);
+        })
+    }
+    const onSelectSubCategory = (value) => {
+        setValues({ ...values, subcategory: value });
     }
 
     //category form
@@ -101,6 +108,8 @@ const ProductCreate = () => {
                 rate: 3.5,
             }}
          >
+             
+
             <Form.Item
                 name="title"
                 label="Product Name"
@@ -112,6 +121,8 @@ const ProductCreate = () => {
                 />
             </Form.Item>
            
+
+
             <Form.Item
                 name="description"
                 label="Description"
@@ -122,6 +133,8 @@ const ProductCreate = () => {
             <TextArea name="description" rows={6} placeholder="Enter the Product description" value={description}
                 onChange = {handleChange}/>
             </Form.Item>
+
+
 
             <Form.Item
                 name="price"
@@ -155,6 +168,30 @@ const ProductCreate = () => {
                 </Select>
             </Form.Item>
 
+            {subsOptions && subsOptions.length>0 && (
+            <Form.Item
+                name="subcategory"
+                label="Sub Category"
+                className="ml-5"
+                rules={[
+                {
+                    required: true,
+                },
+                ]}
+            >
+                <Select 
+                    mode="multiple"
+                    placeholder="Please select the sub category"
+                    value={subcategory}
+                    name="subcategory"
+                    onChange = {onSelectSubCategory}
+                >
+                {subsOptions.length>0 && subsOptions.map((c) => (
+                        <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
+                    ))}
+                </Select>
+            </Form.Item>
+            )}
             <Form.Item
                 name="shipping"
                 label="Shipping"
