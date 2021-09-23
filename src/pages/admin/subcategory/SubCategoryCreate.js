@@ -7,7 +7,7 @@ import { Input, Skeleton, Card, Select } from 'antd';
 import {RightOutlined, LoadingOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import {Button} from "antd";
 import { createSubCategory, getSubCategories, removeSubCategory } from "../../../functions/subcategory";
-import {getCategories} from "../../../functions/category";
+import {getCategories, getCategoriesSub} from "../../../functions/category";
 
 const { Meta } = Card;
 
@@ -72,7 +72,6 @@ const SubCategoryCreate = () => {
                 }
             })
         }
-
     }
 
     //create categories
@@ -91,7 +90,7 @@ const SubCategoryCreate = () => {
             });
             return;
         }
-        if (category=="")
+        if (typeof category === "undefined")
         {
             toast.error('Please select category.', {
                 position: "top-right",
@@ -153,6 +152,17 @@ const SubCategoryCreate = () => {
     const onSelectCategory = (value) => {
         setCategory(value);
     }
+    //search category wise sub
+    const onSearchCategory = (value) => {
+        setLoading(true);
+        setSubCategories([]);
+        getCategoriesSub(value)
+        .then(c => setSubCategories(c.data));
+        setLoading(false);
+    }
+    const clearOptionCreate = () =>{
+        setCategory("0");
+    }
 
     //subcategory form
     const subcategoryForm = () => (
@@ -161,6 +171,7 @@ const SubCategoryCreate = () => {
             <div className="row">
                 <div className="col">
                 <Select
+                    allowClear={clearOptionCreate}
                     showSearch
                     style={{ width: "50%" }}
                     placeholder="Select the category"
@@ -224,7 +235,7 @@ const SubCategoryCreate = () => {
                     optionFilterProp="children"
                     size = "large"
                     className="mt-3 mb-3"
-                    onChange={onSelectCategory}
+                    onChange={onSearchCategory}
                     filterOption={(input, option) =>
                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
@@ -257,6 +268,7 @@ const SubCategoryCreate = () => {
                     <div className="row">
                     {subcategories.filter(searched(search)).map((c) => (
                         <div key={c._id} className="ml-5 mb-2"> 
+                        {console.log()}
                         <Card
                             style={{ width: 300, marginTop: 16 }}
                             actions={[
@@ -267,7 +279,7 @@ const SubCategoryCreate = () => {
                         <Skeleton style={{ width: 300, marginTop: 16 }} loading={loading} active>
                         <Meta
                             title={c.name}
-                            description={c.name}
+                            description={categories.find(({ _id }) => _id === c.parent).name}
                         />
                         </Skeleton>
                         </Card>

@@ -31,3 +31,7 @@ export const createSubCategory = async (subcategory, authtoken) => {
         }
     });
 };
+
+export const getSubBrand = async (_id) => {
+    return await axios.get(`${process.env.REACT_APP_API}/subcategory/brand/${_id}`);
+};

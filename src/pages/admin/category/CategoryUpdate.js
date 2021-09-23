@@ -106,15 +106,6 @@ const CategoryUpdate = ({history, match}) =>
             Please Wait...</Button>
             )}
             <br/>
-            <Button 
-                type="danger"
-                shape="round"
-                className = "mt-3"
-                block
-                icon = {<BackwardOutlined />}
-                size="large"
-                style={{width:"50%"}}
-                ><Link to="/admin/category" style={{color:"white"}}>Back</Link></Button>
         </form>
         </>
 
