@@ -24,8 +24,10 @@ const SubCategoryCreate = () => {
 
     //list out categories and subcategories
     useEffect(() => {
+        setLoading(true);
         loadCategories();
         loadSubCategories();
+        setLoading(false);
     }, []);
     const loadCategories = () => {
         getCategories()
