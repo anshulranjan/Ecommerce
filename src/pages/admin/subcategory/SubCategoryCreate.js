@@ -4,7 +4,7 @@ import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import { Link } from "react-router-dom";
 import { Input, Skeleton, Card, Select } from 'antd';
-import {RightOutlined, LoadingOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
+import {RightOutlined, LoadingOutlined, EditOutlined, DeleteOutlined, SecurityScanTwoTone} from '@ant-design/icons';
 import {Button} from "antd";
 import { createSubCategory, getSubCategories, removeSubCategory } from "../../../functions/subcategory";
 import {getCategories, getCategoriesSub} from "../../../functions/category";
@@ -19,6 +19,7 @@ const SubCategoryCreate = () => {
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubCategories] = useState([]);
+    const [check, setCheck] = useState(false);
     const [category, setCategory] = useState("");
     const {user} = useSelector((state) => ({...state}));
 
@@ -26,18 +27,22 @@ const SubCategoryCreate = () => {
     useEffect(() => {
         setLoading(true);
         loadCategories();
-        loadSubCategories();
-        setLoading(false);
     }, []);
     const loadCategories = () => {
         getCategories()
-        .then(c => setCategories(c.data));
+        .then(c => {
+            setCategories(c.data);
+            loadSubCategories();
+        });
     }
 
     const loadSubCategories = () => {
         getSubCategories()
-        .then(c => setSubCategories(c.data));
-        setLoading(false);
+        .then(c => {
+            setSubCategories(c.data);
+            setCheck(true);
+            setLoading(false);
+        });
     }
 
     //removecategory
@@ -255,18 +260,8 @@ const SubCategoryCreate = () => {
             <br />
             </>
     )
-
-    return(
-        <div id="viewport">
-            <AdminNav />
-            <div id="content">
-                <div className="container-fluid text-center">
-                <h1 className="p-3" style={{fontFamily:"Metropolis"}}>Create Sub Category</h1>
-                {subcategoryForm()}
-                <br/>
-                {searchCategory()}
-                </div>
-                <div className="container">
+    const showResults = () => {
+        return(
                     <div className="row">
                     {subcategories.filter(searched(search)).map((c) => (
                         <div key={c._id} className="ml-5 mb-2"> 
@@ -281,13 +276,38 @@ const SubCategoryCreate = () => {
                         <Skeleton style={{ width: 300, marginTop: 16 }} loading={loading} active>
                         <Meta
                             title={c.name}
-                            description={categories.find(({ _id }) => _id === c.parent).name}
                         />
+                        {
+                            typeof categories.find(({ _id }) => _id === c.parent).name === 'undefined' ? ("Loading Failed. Refresh the page.") : (
+                                <>
+                                    {categories.find(({ _id }) => _id === c.parent).name}
+                                </>
+                            )
+                        }
                         </Skeleton>
                         </Card>
                         </div>
-                    ))}
+                        ))}
+                        </div>
+                )
+                }
+
+    return(
+        <div id="viewport">
+            <AdminNav />
+            <div id="content">
+                <div className="container-fluid text-center">
+                <h1 className="p-3" style={{fontFamily:"Metropolis"}}>Create Sub Category</h1>
+                {subcategoryForm()}
+                <br/>
+                {searchCategory()}
+                </div>
+                <div className="container">
+                    {check ? showResults() : (
+                    <div className="row ml-5 mb-2">
+                        <Card style={{ width: 300, marginTop: 16 }}><Skeleton style={{ width: 300, marginTop: 16 }}/></Card>
                     </div>
+                    )}
                 </div>
             </div>
             </div>

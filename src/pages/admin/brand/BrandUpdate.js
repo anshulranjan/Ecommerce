@@ -25,13 +25,13 @@ const BrandUpdate = ({history, match}) => {
     const [parentSub, setparentSub] = useState("")
     const [wait, setWait] = useState(false);
     const [categories, setCategories] = useState([]);
+    const [check, setCheck] = useState(false)
     const [subsOptions, setSubOptions] = useState([]);
     const {Option } = Select;
     const {user} = useSelector((state) => ({...state}));
 
     //load all categories and sub categories
     useEffect(() => {
-        loadCategories();
         loadBrand();
     }, []);
     const loadCategories = () => {
@@ -44,14 +44,23 @@ const BrandUpdate = ({history, match}) => {
             setName(c.data.name);
             setparentCat(c.data.parentCat);
             setparentSub(c.data.parentSub);
+            loadSubCategories();
+            loadCategories();
         });
+    }
+    const loadSubCategories = () =>{
+        getCategoriesSub(parentCat)
+        .then(res =>{
+            setSubOptions(res.data);
+            setCheck(true);
+        })
     }
 
     //update brand
     const handleSubmit = async(e) => {
         e.preventDefault();
         setWait(true);
-        updateBrand({name, parentCat:parentCat, parentSub:parentSub}, user.token)
+        updateBrand(match.params.id, {name, parentCat:parentCat, parentSub:parentSub}, user.token)
         .then(res => {
             toast.success(`"${res.data.name}" updated successfully`, {
                 position: "top-right",
@@ -84,6 +93,7 @@ const BrandUpdate = ({history, match}) => {
     //handle methods from form
     const onSelectCategory = (value) => {
         setparentCat(value);
+        setparentSub("")
         getCategoriesSub(value)
         .then(res =>{
             setSubOptions(res.data);
@@ -112,7 +122,6 @@ const BrandUpdate = ({history, match}) => {
             }}
          >
             <Form.Item
-                name="category"
                 label="Category"
                 className="ml-5"
                 rules={[
@@ -125,7 +134,6 @@ const BrandUpdate = ({history, match}) => {
                     showSearch
                     placeholder="Please select the category"
                     value={parentCat}
-                    name="category"
                     onChange = {onSelectCategory}
                 >
                 {categories.length>0 && categories.map((c) => (
@@ -134,9 +142,8 @@ const BrandUpdate = ({history, match}) => {
                 </Select>
             </Form.Item>
 
-            {subsOptions && subsOptions.length>0 && (
+            {check && subsOptions && subsOptions.length>0 && (
                 <Form.Item
-                    name="subcategory"
                     label="Sub Category"
                     className="ml-5"
                     rules={[
@@ -149,7 +156,6 @@ const BrandUpdate = ({history, match}) => {
                     showSearch
                     placeholder="Please select the sub category"
                     value={parentSub}
-                    name="subcategory"
                     onChange = {onSelectSubCategory}
                 >
                 {subsOptions.length>0 && subsOptions.map((c) => (
@@ -160,7 +166,6 @@ const BrandUpdate = ({history, match}) => {
             )}
             {parentSub && parentSub!== "" && (
                 <Form.Item
-                    name="name"
                     value={name}
                     label="Brand Name"
                     rules={[{ required: true,  whitespace: true }]}
@@ -182,7 +187,7 @@ const BrandUpdate = ({history, match}) => {
                         size="large"
                         style={{width:"50%"}}
                     >
-                    Add the Brand</Button>
+                    Update the Brand</Button>
                 )
             }
             {wait && (

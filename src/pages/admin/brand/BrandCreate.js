@@ -30,7 +30,8 @@ const BrandCreaate = () => {
     const [categories, setCategories] = useState([]);
     const [subsOptions, setSubOptions] = useState([]);
     const [keyword, setKeyWord] = useState("");
-    const [brands, setBrands] = useState([])
+    const [brands, setBrands] = useState([]);
+    const [check, setCheck] = useState(false);
     const [loading, setLoading] = useState(true);
     const [allSubs, setAllSubs] = useState([]);
     const {Option } = Select;
@@ -39,20 +40,27 @@ const BrandCreaate = () => {
     //load all categories and sub categories
     useEffect(() => {
         loadCategories();
-        loadBrands();
-        loadSubCategories();
     }, []);
     const loadCategories = () => {
         getCategories()
-        .then(c => setCategories(c.data));
+        .then(c => {
+            setCategories(c.data);
+            loadSubCategories();
+        })
     }
     const loadSubCategories = () => {
         getSubCategories()
-        .then(c => setAllSubs(c.data));
+        .then(c => {
+            setAllSubs(c.data);
+            loadBrands();
+        });
     }
     const loadBrands = () => {
         getBrands()
-        .then(c => setBrands(c.data));
+        .then(c => {
+            setBrands(c.data);
+            setCheck(true);
+        })
         setLoading(false);
     }
 
@@ -174,7 +182,6 @@ const BrandCreaate = () => {
             )}
             {parentSub && parentSub!== "" && (
                 <Form.Item
-                    name="name"
                     label="Brand Name"
                     rules={[{ required: true,  whitespace: true }]}
                     className="ml-5"
@@ -287,9 +294,8 @@ const BrandCreaate = () => {
                         {searchBrand()}
                     </div>
                     <div className="row">
-                    {brands.filter(searched(keyword)).map((c) => (
+                    {check ? brands.filter(searched(keyword)).map((c) => (
                         <div key={c._id} className="ml-5 mb-2"> 
-                        {console.log(categories.length>0 && categories && typeof categories.find(({ _id }) => _id === c.parentCat).name !== 'undefined')}
                         <Card
                             style={{ width: 300, marginTop: 16 }}
                             actions={[
@@ -301,15 +307,22 @@ const BrandCreaate = () => {
                         <Meta
                             title={c.name}
                         />
-                        <br/>
-                        
-                        {/*allSubs.find(({ _id }) => _id === c.parentSub) ? "NO result" : (
-                            <p>Sub Category: {allSubs.find(({ _id }) => _id === c.parentSub).name}</p>) */
+                        <br />
+                        {categories.find(({ _id }) => _id === c.parentCat).name ? (
+                            <p>Category: {categories.find(({ _id }) => _id === c.parentCat).name}</p>) : "Loading Failed. Try Again"
+                        }
+                        <br />
+                        {allSubs.find(({ _id }) => _id === c.parentSub).name ? (
+                            <p>Sub Category: {allSubs.find(({ _id }) => _id === c.parentSub).name}</p>) : "Loading Failed. Try Again"
                         }
                         </Skeleton>
                         </Card>
                         </div>
-                    ))}
+                    )) : (
+                        <div className="ml-5 mb-2">
+                        <Card style={{ width: 300, marginTop: 16 }}><Skeleton style={{ width: 300, marginTop: 16 }}/></Card>                      
+                          </div>
+                        )}
                     </div>
                 </div>
                 
