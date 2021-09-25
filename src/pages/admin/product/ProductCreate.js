@@ -2,21 +2,24 @@ import React, {useState, useEffect} from "react";
 import AdminNav from "../../../components/nav/AdminNav";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
-import { Link } from "react-router-dom";
-import { Input, Form, Select } from 'antd';
+import { Input, Form, Select, Upload, Avatar, Badge } from 'antd';
 import {RightOutlined, LoadingOutlined} from '@ant-design/icons';
 import {Button} from "antd";
 import {getCategories, getCategoriesSub } from "../../../functions/category";
 import { createProduct } from "../../../functions/product";
+import ImgCrop from 'antd-img-crop';
+import axios from "axios";
+import Resizer from "react-image-file-resizer";
+
 const initState = {
     title:'',
     description:'',
     price:'',
     category:'',
+    images:[],
     categories:[],
     subcategory:[],
     quantity:'',
-    images:[],
     colors:["Black","Red","Green","Silver","White","Blue"],
 };
 const formItemLayout = {
@@ -30,14 +33,17 @@ const formItemLayout = {
 
 const ProductCreate = () => {
     const [values, setValues] = useState(initState);
-    const {title, description, price, category, categories, subcategory, quantity, images, colors} = values;
+    const {title, description, price, category, categories, subcategory, quantity, colors} = values;
     const [wait, setWait] = useState(false);
     const { TextArea } = Input;
     const { Option } = Select;
     const [color, setColor] = useState("");
+    const [gender, setGender] = useState("");
     const [shipping, setShipping] = useState("");
     const [subsOptions, setSubOptions] = useState([]);
     const {user} = useSelector((state) => ({...state}));
+    const [uploading, setUploading] = useState(false);
+    let allUploadedFiles = values.images;
 
     //load all categories
     useEffect(() => {
@@ -52,7 +58,8 @@ const ProductCreate = () => {
    const handleSubmit = (e) => {
        e.preventDefault();
        setWait(true);
-       createProduct({values, color, shipping},user.token)
+
+       createProduct({values, color, shipping, gender},user.token)
        .then(res=>{
            console.log(res)
            setWait(false);
@@ -74,6 +81,50 @@ const ProductCreate = () => {
 
     })
    }
+
+   //file upload functions
+   
+    const uploadImage = ({ file, onSuccess, data}) =>{
+            setUploading(true);
+            Resizer.imageFileResizer(file,720,720,"JPEG",100,0,(uri) => {
+                axios.post(`${process.env.REACT_APP_API}/uploadimages`,{image:uri},{
+                    headers:{
+                        authtoken: user.token
+                    }
+                })
+                .then(res=> {
+                    data = res.data;
+                    setUploading(false);
+                    allUploadedFiles.push(res.data);
+                    setValues({ ...values, images: allUploadedFiles });
+                    setTimeout(() => {
+                        onSuccess("ok");
+                    }, 0);
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+              },"base64");
+    };
+    const handleImageRemove = (public_id) => {
+        axios.post(`${process.env.REACT_APP_API}/removeimage`,{public_id},{
+            headers:{
+                authtoken: user.token
+            },
+        })
+        .then((res) =>{
+            const {images} = values;
+            let filteredimage = images.filter((item) => {
+                return item.public_id !== public_id
+            });
+            setValues({ ...values, images: filteredimage });
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    
+
    //handle methods from form
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
@@ -94,8 +145,11 @@ const ProductCreate = () => {
     const onSelectSubCategory = (value) => {
         setValues({ ...values, subcategory: value });
     }
+    const onSelectGender = (value) => {
+        setGender(value);
+    }
 
-    //category form
+    //product form
     const productForm = () => (
         <>
         <Form
@@ -109,6 +163,29 @@ const ProductCreate = () => {
             }}
          >
              
+             <Form.Item
+                label="Upload the Images"
+                rules={[{ required: true,}]}
+                className="ml-5"
+            >
+            {values.images && values.images.map((image) => (
+                    <Badge count="X" key = {image.public_id} onClick ={() =>handleImageRemove(image.public_id)} style={{cursor:"pointer"}}>
+                    <Avatar src = {image.url} size={105} shape="square" className="ml-4 border mb-2"/>
+                    </Badge>
+            ))}
+            {uploading &&  (
+                    <Avatar size={105} shape="square" className="ml-4 border mb-2" icon={<LoadingOutlined/> } />
+            )}
+            <ImgCrop rotate>
+            <Upload
+                customRequest = {uploadImage}
+                listType="picture-card"
+                showUploadList={false}
+            >
+            {allUploadedFiles.length < 4 && '+ Upload'}
+            </Upload>
+            </ImgCrop>
+            </Form.Item>
 
             <Form.Item
                 name="title"
@@ -244,6 +321,27 @@ const ProductCreate = () => {
                     ))}
                 </Select>
             </Form.Item>
+            <Form.Item
+                name="gender"
+                label="Suitable For"
+                className="ml-5"
+                rules={[
+                {
+                    required: true,
+                },
+                ]}
+            >
+                <Select 
+                    name="color"
+                    placeholder="Please select the category"
+                    value={color}
+                    onChange = {onSelectGender}
+                >
+                <Option value="male">Male</Option>
+                <Option value="female">Female</Option>
+                <Option value="both">Both</Option>
+                </Select>
+                </Form.Item>
 
 
             <br />
