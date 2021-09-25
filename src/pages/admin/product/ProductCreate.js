@@ -3,13 +3,14 @@ import AdminNav from "../../../components/nav/AdminNav";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import { Input, Form, Select, Upload, Avatar, Badge } from 'antd';
-import {RightOutlined, LoadingOutlined} from '@ant-design/icons';
+import {RightOutlined, LoadingOutlined, BranchesOutlined} from '@ant-design/icons';
 import {Button} from "antd";
 import {getCategories, getCategoriesSub } from "../../../functions/category";
 import { createProduct } from "../../../functions/product";
 import ImgCrop from 'antd-img-crop';
 import axios from "axios";
 import Resizer from "react-image-file-resizer";
+import { getSubBrand } from "../../../functions/subcategory";
 
 const initState = {
     title:'',
@@ -20,7 +21,7 @@ const initState = {
     categories:[],
     subcategory:[],
     quantity:'',
-    colors:["Black","Red","Green","Silver","White","Blue"],
+    colors:["Black","Red","Green","Silver","White","Blue","Yellow","Black","Grey"],
 };
 const formItemLayout = {
     labelCol: {
@@ -33,14 +34,16 @@ const formItemLayout = {
 
 const ProductCreate = () => {
     const [values, setValues] = useState(initState);
-    const {title, description, price, category, categories, subcategory, quantity, colors} = values;
+    const {title, images, description, price, category, categories, subcategory, quantity, colors} = values;
     const [wait, setWait] = useState(false);
     const { TextArea } = Input;
     const { Option } = Select;
     const [color, setColor] = useState("");
+    const [brand, setBrand] = useState("");
     const [gender, setGender] = useState("");
     const [shipping, setShipping] = useState("");
     const [subsOptions, setSubOptions] = useState([]);
+    const [brandsOptions, setBrandOptions] = useState([]);
     const {user} = useSelector((state) => ({...state}));
     const [uploading, setUploading] = useState(false);
     let allUploadedFiles = values.images;
@@ -57,9 +60,51 @@ const ProductCreate = () => {
     
    const handleSubmit = (e) => {
        e.preventDefault();
-       setWait(true);
+       if(images.length==0 || title.length==0 || description.length==0 || price.length==0 || category.length==0 || subcategory.length==0 || quantity.length==0 || color.length==0 || brand.length==0 || gender.length==0 || shipping.length==0)
+       {
+            toast.error('All fields are required', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return;
+       }
+       let isnum = /^\d+$/.test(price);
+       let isnum1 = /^\d+$/.test(quantity);
+       if(!isnum)
+       {
+            toast.error('The price must be only integer value', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return;
 
-       createProduct({values, color, shipping, gender},user.token)
+       }
+       if(!isnum1)
+       {
+            toast.error('The quantity must be integer value', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return;
+
+       }
+       setWait(true);
+       createProduct({values, color, shipping, gender, brand},user.token)
        .then(res=>{
            console.log(res)
            setWait(false);
@@ -68,7 +113,7 @@ const ProductCreate = () => {
            
        })
        .catch(err => {
-        setWait(false);
+            setWait(false);
             toast.error(err.response.data.err, {
                 position: "top-right",
                 autoClose: 5000,
@@ -144,9 +189,16 @@ const ProductCreate = () => {
     }
     const onSelectSubCategory = (value) => {
         setValues({ ...values, subcategory: value });
+        getSubBrand(value)
+        .then(res => {
+            setBrandOptions(res.data)
+        })
     }
     const onSelectGender = (value) => {
         setGender(value);
+    }
+    const onSelectBrand = (value) => {
+        setBrand(value);
     }
 
     //product form
@@ -234,6 +286,7 @@ const ProductCreate = () => {
                 ]}
             >
                 <Select 
+                    showSearch
                     placeholder="Please select the category"
                     value={category}
                     name="category"
@@ -257,13 +310,37 @@ const ProductCreate = () => {
                 ]}
             >
                 <Select 
-                    mode="multiple"
+                    showSearch
                     placeholder="Please select the sub category"
                     value={subcategory}
                     name="subcategory"
                     onChange = {onSelectSubCategory}
                 >
                 {subsOptions.length>0 && subsOptions.map((c) => (
+                        <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
+                    ))}
+                </Select>
+            </Form.Item>
+            )}
+            {brandsOptions && brandsOptions.length>0 && (
+            <Form.Item
+                name="brand"
+                label="Brand"
+                className="ml-5"
+                rules={[
+                {
+                    required: true,
+                },
+                ]}
+            >
+                <Select 
+                    showSearch
+                    placeholder="Please select the brand"
+                    value={brand}
+                    name="brand"
+                    onChange = {onSelectBrand}
+                >
+                {brandsOptions.length>0 && brandsOptions.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
                     ))}
                 </Select>
