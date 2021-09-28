@@ -1,16 +1,19 @@
 import React, {useState, useEffect} from "react";
 import AdminNav from "../../../components/nav/AdminNav";
-import { getProductsByCount } from "../../../functions/product";
+import { getProductsByCount, removeProduct } from "../../../functions/product";
 import { Card, Skeleton, Image } from 'antd';
 import { Link } from "react-router-dom";
 import { EditOutlined, DeleteOutlined, SettingOutlined } from '@ant-design/icons';
 import {toast} from "react-toastify";
+import {useSelector} from "react-redux";
+
 const { Meta } = Card;
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const arr = new Array(21)
+    const arr = new Array(21);
+    const {user} = useSelector((state) => ({...state}));
     var elements=[];
     useEffect(() => {
         loadAllProducts();
@@ -35,6 +38,45 @@ const ProductList = () => {
                 }
         })
     }
+
+    //remove product
+    const handleRemove = async (slug) => {
+        let answer = window.confirm("Are you sure want to delete this product?");
+        if(answer)
+        {
+            removeProduct(slug, user.token)
+            .then(res => {
+                toast.error(`"${res.data.title}" deleted successfully`, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    });
+                setLoading(true);
+                loadAllProducts();
+            })
+            .catch(err =>{
+                if(err.response.status === 400){
+                    toast.error(err.response.data, {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }
+            })
+        }
+    }
+
+    const defaultImage = () => (
+        <Image />
+    )
     for(var i=0;i<arr.length;i++){
         elements.push(
             <div className="col-md-4 mb-2" key={i}> 
@@ -66,14 +108,14 @@ const ProductList = () => {
                             style={{ width: 300 }}
                             cover={
                               <img
-                                src={p.images && p.images.length ? p.images[0].url : <Image /> }
+                                src={p.images && p.images.length ? p.images[0].url : defaultImage() }
                                 style={{height:"150px", objectFit:'cover'}}
                                 className="p-1"
                               />
                             }
                             actions={[
                                 <Link to={`/admin/product/${p.slug}`}><EditOutlined key="edit" /></Link>,
-                                <DeleteOutlined key="delete" />,
+                                <DeleteOutlined key="delete" onClick={() => handleRemove(p.slug)} />,
                               
                             ]}
                           >

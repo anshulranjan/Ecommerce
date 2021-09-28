@@ -3,24 +3,18 @@ import AdminNav from "../../../components/nav/AdminNav";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import { Input, Form, Select, Upload, Avatar, Badge } from 'antd';
-import {RightOutlined, LoadingOutlined} from '@ant-design/icons';
+import {RightOutlined, LoadingOutlined, BranchesOutlined} from '@ant-design/icons';
 import {Button} from "antd";
 import {getCategories, getCategoriesSub } from "../../../functions/category";
-import { createProduct } from "../../../functions/product";
+import { getProduct, updateProduct } from "../../../functions/product";
 import ImgCrop from 'antd-img-crop';
 import axios from "axios";
 import Resizer from "react-image-file-resizer";
 import { getSubBrand } from "../../../functions/subcategory";
 
 const initState = {
-    title:'',
-    description:'',
-    price:'',
-    category:'',
-    images:[],
+    
     categories:[],
-    subcategory:[],
-    quantity:'',
     colors:["Black","Red","Green","Silver","White","Blue","Yellow","Black","Grey"],
 };
 const formItemLayout = {
@@ -32,12 +26,19 @@ const formItemLayout = {
     },
 };
 
-const ProductCreate = () => {
+const ProductUpdate = ({match, history}) => {
     const [values, setValues] = useState(initState);
-    const {title, images, description, price, category, categories, subcategory, quantity, colors} = values;
+    const {categories, colors} = values;
     const [wait, setWait] = useState(false);
     const { TextArea } = Input;
     const { Option } = Select;
+    const [title, setTitle] = useState("");
+    const [images, setImages] = useState([]);
+    const [description, setDes] = useState("");
+    const [price, setPrice] = useState("");
+    const [category, setCategory] = useState("");
+    const [subcategory, setSub] = useState("");
+    const [quantity, setQuantity] = useState("");
     const [color, setColor] = useState("");
     const [brand, setBrand] = useState("");
     const [gender, setGender] = useState("");
@@ -45,17 +46,48 @@ const ProductCreate = () => {
     const [subsOptions, setSubOptions] = useState([]);
     const [brandsOptions, setBrandOptions] = useState([]);
     const {user} = useSelector((state) => ({...state}));
+    const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
-    let allUploadedFiles = values.images;
+    let allUploadedFiles = images;
+    console.log(allUploadedFiles.length)
 
     //load all categories
     useEffect(() => {
+        loadProduct();
         loadCategories();
     }, []);
-
+    const loadProduct = () =>{
+        getProduct(match.params.slug)
+        .then(p => {
+            setImages(p.data.images);
+            setTitle(p.data.title);
+            setDes(p.data.description);
+            setPrice(p.data.price);
+            setCategory(p.data.category._id);
+            setSub(p.data.subcategory._id);
+            setQuantity(p.data.quantity);
+            setColor(p.data.color);
+            setBrand(p.data.brand);
+            setGender(p.data.gender);
+            setShipping(p.data.shipping);
+            loadSubCategory(p.data.category._id);
+            getSubBrand(p.data.subcategory._id)
+            .then(res => {
+                setBrandOptions(res.data)
+            })
+            setLoading(false);
+        })
+    }
     const loadCategories = () => {
         getCategories()
         .then(c => setValues({ ...values, categories: c.data }));
+    }
+    const loadSubCategory = (value) =>{
+        getCategoriesSub(value)
+            .then(res =>{
+                console.log(res.data);
+                setSubOptions(res.data);
+            })
     }
     
    const handleSubmit = (e) => {
@@ -104,17 +136,9 @@ const ProductCreate = () => {
 
        }
        setWait(true);
-       createProduct({values, color, shipping, gender, brand},user.token)
-       .then(res=>{
-           console.log(res)
-           setWait(false);
-           window.alert(`${res.data.title} is created`);
-           window.location.reload();
-           
-       })
-       .catch(err => {
-            setWait(false);
-            toast.error(err.response.data.err, {
+       updateProduct(match.params.slug, {images,title, description, price, quantity, category, subcategory, color, gender, brand, shipping}, user.token)
+        .then(res => {
+            toast.success(`"${res.data.title}" updated successfully`, {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -122,11 +146,26 @@ const ProductCreate = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-            });
+                });
+            history.push("/admin/products")
+        })
+        .catch(err => {
+            setWait(false);
+            if(err.response.status === 400){
+                toast.error(err.response.data, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
 
-    })
+        })
+       
    }
-
    //file upload functions
    
     const uploadImage = ({ file, onSuccess, data}) =>{
@@ -139,9 +178,9 @@ const ProductCreate = () => {
                 })
                 .then(res=> {
                     data = res.data;
-                    setUploading(false);
                     allUploadedFiles.push(res.data);
-                    setValues({ ...values, images: allUploadedFiles });
+                    setImages(allUploadedFiles);
+                    setUploading(false);
                     setTimeout(() => {
                         onSuccess("ok");
                     }, 0);
@@ -158,11 +197,10 @@ const ProductCreate = () => {
             },
         })
         .then((res) =>{
-            const {images} = values;
             let filteredimage = images.filter((item) => {
                 return item.public_id !== public_id
             });
-            setValues({ ...values, images: filteredimage });
+            setImages(filteredimage);
         })
         .catch(err => {
             console.log(err)
@@ -171,9 +209,19 @@ const ProductCreate = () => {
     
 
    //handle methods from form
-    const handleChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value });
+    const handleChangeName = (e) => {
+        setTitle(e.target.value);
     };
+    const handleChangeDes = (e) => {
+        setDes(e.target.value);
+    };
+    const handleChangePrice = (e) => {
+        setPrice(e.target.value);
+    };
+    const handleChangeQuantity = (e) => {
+        setQuantity(e.target.value);
+    };
+
     const onSelectColor = (value) => {
         setColor(value);
     }
@@ -181,14 +229,17 @@ const ProductCreate = () => {
         setShipping(value);
     }
     const onSelectCategory = (value) => {
-        setValues({ ...values, category: value });
+        setCategory(value);
+        setSub("");
+        setBrand("");
         getCategoriesSub(value)
         .then(res =>{
             setSubOptions(res.data);
         })
     }
     const onSelectSubCategory = (value) => {
-        setValues({ ...values, subcategory: value });
+        setSub(value);
+        setBrand("");
         getSubBrand(value)
         .then(res => {
             setBrandOptions(res.data)
@@ -214,13 +265,12 @@ const ProductCreate = () => {
                 rate: 3.5,
             }}
          >
-             
              <Form.Item
                 label="Upload the Images"
                 rules={[{ required: true,}]}
                 className="ml-5"
             >
-            {values.images && values.images.map((image) => (
+            {images && images.map((image) => (
                     <Badge count="X" key = {image.public_id} onClick ={() =>handleImageRemove(image.public_id)} style={{cursor:"pointer"}}>
                     <Avatar src = {image.url} size={105} shape="square" className="ml-4 border mb-2"/>
                     </Badge>
@@ -238,45 +288,42 @@ const ProductCreate = () => {
             </Upload>
             </ImgCrop>
             </Form.Item>
-
+             
             <Form.Item
-                name="title"
+                value={title}
                 label="Product Name"
                 rules={[{ required: true,  whitespace: true }]}
                 className="ml-5"
             >
             <Input name="title" placeholder="Enter the Product Name"  value={title}
-                onChange = {handleChange}
+                onChange = {handleChangeName}
                 />
             </Form.Item>
            
 
 
             <Form.Item
-                name="description"
                 label="Description"
                 rules={[{ required: true,  whitespace: true }]}
                 className="ml-5"
                 
             >
             <TextArea name="description" rows={6} placeholder="Enter the Product description" value={description}
-                onChange = {handleChange}/>
+                onChange = {handleChangeDes}/>
             </Form.Item>
 
 
 
             <Form.Item
-                name="price"
                 label="Price"
                 rules={[{ required: true,  whitespace: true }]}
                 className="ml-5"
             >
             <Input name="price" placeholder="Enter the Product Price" value={price}
-                onChange = {handleChange}/>
+                onChange = {handleChangePrice}/>
             </Form.Item>
 
             <Form.Item
-                name="category"
                 label="Category"
                 className="ml-5"
                 rules={[
@@ -291,16 +338,21 @@ const ProductCreate = () => {
                     value={category}
                     name="category"
                     onChange = {onSelectCategory}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
                 {categories.length>0 && categories.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
                     ))}
                 </Select>
             </Form.Item>
-
-            {subsOptions && subsOptions.length>0 && (
+            
             <Form.Item
-                name="subcategory"
                 label="Sub Category"
                 className="ml-5"
                 rules={[
@@ -313,18 +365,22 @@ const ProductCreate = () => {
                     showSearch
                     placeholder="Please select the sub category"
                     value={subcategory}
-                    name="subcategory"
                     onChange = {onSelectSubCategory}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
-                {subsOptions.length>0 && subsOptions.map((c) => (
+                {subsOptions && subsOptions.length>0 && subsOptions.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
                     ))}
                 </Select>
             </Form.Item>
-            )}
-            {brandsOptions && brandsOptions.length>0 && (
+        
             <Form.Item
-                name="brand"
                 label="Brand"
                 className="ml-5"
                 rules={[
@@ -339,15 +395,20 @@ const ProductCreate = () => {
                     value={brand}
                     name="brand"
                     onChange = {onSelectBrand}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
-                {brandsOptions.length>0 && brandsOptions.map((c) => (
+                {brandsOptions && brandsOptions.length>0 && brandsOptions.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
                     ))}
                 </Select>
             </Form.Item>
-            )}
             <Form.Item
-                name="shipping"
                 label="Shipping"
                 className="ml-5"
                 rules={[
@@ -368,17 +429,15 @@ const ProductCreate = () => {
             </Form.Item>
 
             <Form.Item
-                name="quantity"
                 label="Quantity"
                 rules={[{ required: true,  whitespace: true }]}
                 className="ml-5"
             >
             <Input name="quantity" placeholder="Mention the Quantity" value={quantity}
-                onChange = {handleChange}/>
+                onChange = {handleChangeQuantity}/>
             </Form.Item>
 
             <Form.Item
-                name="color"
                 label="Color"
                 className="ml-5"
                 rules={[
@@ -399,7 +458,6 @@ const ProductCreate = () => {
                 </Select>
             </Form.Item>
             <Form.Item
-                name="gender"
                 label="Suitable For"
                 className="ml-5"
                 rules={[
@@ -409,9 +467,8 @@ const ProductCreate = () => {
                 ]}
             >
                 <Select 
-                    name="color"
-                    placeholder="Please select the category"
-                    value={color}
+                    placeholder="Please select"
+                    value={gender}
                     onChange = {onSelectGender}
                 >
                 <Option value="male">Male</Option>
@@ -431,10 +488,10 @@ const ProductCreate = () => {
                     block
                     icon = {<RightOutlined />}
                     size="large"
-                    disabled = {title.length < 3 }
+                    //disabled = {title.length < 3 }
                     style={{width:"50%"}}
                 >
-                Add the Product</Button>
+                Update the Product</Button>
             )}
             {wait && (
                 <Button 
@@ -457,8 +514,8 @@ const ProductCreate = () => {
             <AdminNav />
             <div id="content">
                 <div className="container-fluid text-center">
-                <h1 className="p-3" style={{fontFamily:"Metropolis"}}>Create Product</h1>
-                {productForm()}
+                <h1 className="p-3" style={{fontFamily:"Metropolis"}}>Update Product</h1>
+                {!loading && productForm()}
                 <br/>
                 </div>
                 
@@ -467,5 +524,5 @@ const ProductCreate = () => {
     )
 
 }
-export default ProductCreate;
+export default ProductUpdate;
 
