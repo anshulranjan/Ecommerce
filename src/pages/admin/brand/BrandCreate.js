@@ -106,6 +106,7 @@ const BrandCreaate = () => {
     //handle methods from form
     const onSelectCategory = (value) => {
         setparentCat(value);
+        setparentSub("");
         getCategoriesSub(value)
         .then(res =>{
             setSubOptions(res.data);
@@ -134,7 +135,6 @@ const BrandCreaate = () => {
             }}
          >
             <Form.Item
-                name="category"
                 label="Category"
                 className="ml-5"
                 rules={[
@@ -149,6 +149,13 @@ const BrandCreaate = () => {
                     value={parentCat}
                     name="category"
                     onChange = {onSelectCategory}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
                 {categories.length>0 && categories.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
@@ -158,7 +165,6 @@ const BrandCreaate = () => {
 
             {subsOptions && subsOptions.length>0 && (
                 <Form.Item
-                    name="subcategory"
                     label="Sub Category"
                     className="ml-5"
                     rules={[
@@ -173,6 +179,13 @@ const BrandCreaate = () => {
                     value={parentSub}
                     name="subcategory"
                     onChange = {onSelectSubCategory}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
                 {subsOptions.length>0 && subsOptions.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
@@ -239,7 +252,7 @@ const BrandCreaate = () => {
 
     //remove functions
     const handleRemove = async (id) => {
-        let answer = window.confirm("Are you sure want to delete this brand?");
+        let answer = window.confirm("Are you sure want to delete this brand? All the associated products will be deleted.");
         if(answer)
         {
             removeBrand(id, user.token)

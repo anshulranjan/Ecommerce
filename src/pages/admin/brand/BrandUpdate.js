@@ -44,12 +44,12 @@ const BrandUpdate = ({history, match}) => {
             setName(c.data.name);
             setparentCat(c.data.parentCat);
             setparentSub(c.data.parentSub);
-            loadSubCategories();
             loadCategories();
+            loadSubCategories(c.data.parentCat);
         });
     }
-    const loadSubCategories = () =>{
-        getCategoriesSub(parentCat)
+    const loadSubCategories = (value) =>{
+        getCategoriesSub(value)
         .then(res =>{
             setSubOptions(res.data);
             setCheck(true);
@@ -135,6 +135,13 @@ const BrandUpdate = ({history, match}) => {
                     placeholder="Please select the category"
                     value={parentCat}
                     onChange = {onSelectCategory}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
                 {categories.length>0 && categories.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
@@ -157,6 +164,13 @@ const BrandUpdate = ({history, match}) => {
                     placeholder="Please select the sub category"
                     value={parentSub}
                     onChange = {onSelectSubCategory}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
                 {subsOptions.length>0 && subsOptions.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
@@ -176,7 +190,7 @@ const BrandUpdate = ({history, match}) => {
                     />
                 </Form.Item>
             )}
-            {!wait && name!== "" && (
+            {!wait && parentSub.length>0 && name!== "" && (
                     <Button 
                         onClick={handleSubmit}
                         type="primary"

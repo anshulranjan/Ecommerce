@@ -47,7 +47,7 @@ const SubCategoryCreate = () => {
 
     //removecategory
     const handleRemove = async (slug) => {
-        let answer = window.confirm("Are you sure want to delete this subcategory?");
+        let answer = window.confirm("Are you sure want to delete this subcategory? All the associated brands and products will be deleted.");
         if(answer)
         {
             removeSubCategory(slug, user.token)

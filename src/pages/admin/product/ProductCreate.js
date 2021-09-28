@@ -291,6 +291,13 @@ const ProductCreate = () => {
                     value={category}
                     name="category"
                     onChange = {onSelectCategory}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
                 {categories.length>0 && categories.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
@@ -315,6 +322,13 @@ const ProductCreate = () => {
                     value={subcategory}
                     name="subcategory"
                     onChange = {onSelectSubCategory}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
                 {subsOptions.length>0 && subsOptions.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
@@ -339,6 +353,13 @@ const ProductCreate = () => {
                     value={brand}
                     name="brand"
                     onChange = {onSelectBrand}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
                 >
                 {brandsOptions.length>0 && brandsOptions.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>
