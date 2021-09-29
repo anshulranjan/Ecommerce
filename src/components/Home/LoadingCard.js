@@ -9,7 +9,7 @@ export const LoadingCard = ({i}) => {
             <Card
             hoverable
             bordered={false}
-            style={{ width: 240 }}
+            style={{ width: 240, height: 400 }}
             className="p-3"
             >
             <Skeleton active/>

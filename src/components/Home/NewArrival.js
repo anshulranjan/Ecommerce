@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { Card, Typography, Row } from 'antd';
+import { Card, Typography, Row, Pagination } from 'antd';
 import { ProductCard } from "./ProductCard";
 import {toast} from "react-toastify";
 import { getProducts } from "../../functions/product";
@@ -9,13 +9,16 @@ const { Title } = Typography;
 export const NewArrival = () =>{
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [proCount, setProCount] = useState(12);
+    const [page, setPage] = useState(1);
     const arr = new Array(6);
     var elements=[];
     useEffect(() => {
         loadAllProducts();
-    }, []);
+    }, [page]);
     const loadAllProducts = () => {
-        getProducts('createdAt',"desc", 12)
+        setLoading(true);
+        getProducts('createdAt',"desc", page)
         .then(res => {
             console.log(res.data);
             setProducts(res.data);
@@ -40,6 +43,7 @@ export const NewArrival = () =>{
     }
 
     return(
+        <>
         <div className="p-2">
             <Card title={<Title level={2}>New Arrivals</Title>} bordered={false} extra={<a href="#">View All</a>} style={{ width: "100%" }}>
                 <Row>
@@ -50,7 +54,13 @@ export const NewArrival = () =>{
                         )}
                     { loading &&  elements}
                 </Row>
+                <div className="row">
+                    <nav className="col-md-4 offset-md-4 text center pt-5 p-3">
+                        <Pagination current={page} total = {(proCount/6) * 10} onChange = {(value) => setPage(value)}/>
+                    </nav>
+                </div>
             </Card>
         </div>
+        </>
     )
 }
