@@ -6,25 +6,46 @@ import {Link} from "react-router-dom";
 const { Meta } = Card;
 
 export const ProductCard = ({product}) => {
-    console.log(typeof product.createdAt);
+    var today = new Date();
+    var createdDate = new Date(product.createdAt.substring(0,4), product.createdAt.substring(5,7)-1, product.createdAt.substring(8,10));
+    var Difference_In_Time = today.getTime() - createdDate.getTime();
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    console.log(Difference_In_Days);
+
     return(
         <>
             <Col span={4} key={product._id}>
             <Link to={`/admin/products`}>
-            <Badge.Ribbon text="New">
-            <Card
-            hoverable
-            bordered={false}
-            style={{ width: 240 }}
-            className="p-3"
-            cover={<img alt="example" src={product.images[0].url} />}
-            >
-            <Meta />
-            <p style={{fontFamily:"sans-serif"}}><b>{product.title.substring(0,60)}...</b></p>
-            <Badge className="site-badge-count-109" count={4.4} style={{ backgroundColor: '#52c41a' }} />
-            <p style={{color:"grey"}}>Rs {product.price}</p>
-            </Card>
-            </Badge.Ribbon>
+            {Difference_In_Days < 2 && (
+                <Badge.Ribbon text="New">
+                <Card
+                hoverable
+                bordered={false}
+                style={{ width: 240 }}
+                className="p-3"
+                cover={<img alt="example" src={product.images[0].url} />}
+                >
+                <Meta />
+                <p style={{fontFamily:"sans-serif"}}><b>{product.title.substring(0,60)}...</b></p>
+                <Badge className="site-badge-count-109" count={4.4} style={{ backgroundColor: '#52c41a' }} />
+                <p style={{color:"grey"}}>Rs {product.price}</p>
+                </Card>
+                </Badge.Ribbon>
+            )}
+            {Difference_In_Days >= 2 && (
+                <Card
+                hoverable
+                bordered={false}
+                style={{ width: 240 }}
+                className="p-3"
+                cover={<img alt="example" src={product.images[0].url} />}
+                >
+                <Meta />
+                <p style={{fontFamily:"sans-serif"}}><b>{product.title.substring(0,60)}...</b></p>
+                <Badge className="site-badge-count-109" count={4.4} style={{ backgroundColor: '#52c41a' }} />
+                <p style={{color:"grey"}}>Rs {product.price}</p>
+                </Card>
+            )}
             </Link>
             </Col>
         </>
