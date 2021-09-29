@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 const { Meta } = Card;
 
 export const ProductCard = ({product}) => {
+    console.log(typeof product.createdAt);
     return(
         <>
             <Col span={4} key={product._id}>

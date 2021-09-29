@@ -6,7 +6,7 @@ import { getProducts } from "../../functions/product";
 import { LoadingCard } from "./LoadingCard";
 const { Title } = Typography;
 
-export const NewArrival = () =>{
+export const BestSeller = () =>{
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const arr = new Array(6);
@@ -15,7 +15,7 @@ export const NewArrival = () =>{
         loadAllProducts();
     }, []);
     const loadAllProducts = () => {
-        getProducts('createdAt',"desc", 12)
+        getProducts('sold',"desc", 12)
         .then(res => {
             console.log(res.data);
             setProducts(res.data);
@@ -41,7 +41,7 @@ export const NewArrival = () =>{
 
     return(
         <div className="p-2">
-            <Card title={<Title level={2}>New Arrivals</Title>} bordered={false} extra={<a href="#">View All</a>} style={{ width: "100%" }}>
+            <Card title={<Title level={2}>Best Sellers</Title>} bordered={false} extra={<a href="#">View All</a>} style={{ width: "100%" }}>
                 <Row>
                     {!loading && products.map((product) => 
                         (

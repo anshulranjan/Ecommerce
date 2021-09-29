@@ -2,6 +2,7 @@ import React from "react";
 import {HomeSubMenu} from "../components/Home/HomeSubMenu";
 import { NewArrival } from "../components/Home/NewArrival";
 import Typewriter from "typewriter-effect";
+import { BestSeller } from "../components/Home/BestSeller";
 
 const Home = () =>{
     return(
@@ -20,7 +21,7 @@ const Home = () =>{
                     </h1>
                 </div>
                 <NewArrival />
-                <NewArrival />
+                <BestSeller />
             </div>
         </div>
     )
