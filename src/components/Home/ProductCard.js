@@ -15,7 +15,7 @@ export const ProductCard = ({product}) => {
     return(
         <>
             <Col span={4} key={product._id}>
-            <Link to={`/admin/products`}>
+            <Link to={`/product/${product.slug}`}>
             {Difference_In_Days < 2 && (
                 <Badge.Ribbon text="New">
                 <Card

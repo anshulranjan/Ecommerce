@@ -97,3 +97,10 @@
 #sidebar .nav a i{
   margin-right: 16px;
 }
+
+.link1 {
+  color: #bfbfbf
+}
+.link1:hover {
+   color: #595959 
+}

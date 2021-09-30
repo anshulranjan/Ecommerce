@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Input, Skeleton, Card } from 'antd';
 import {RightOutlined, LoadingOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import {Button} from "antd";
-import { createCategory, getCategories, removeCategory } from "../../../functions/category";
+import { createCategory, getCategories, removeCategory, productsCountWithCategory } from "../../../functions/category";
 
 const { Meta } = Card;
 
@@ -164,6 +164,16 @@ const CategoryCreate = () => {
             <Input className="mt-3 mb-3" autoFocus value={search} onChange={handleSearchChange} placeholder="Search categories" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px", width:"25%"}}/>
         </>
     )
+    const productCount = (id) =>{
+        var total;
+        productsCountWithCategory(id)
+        .then(
+            res => {
+                total = res.data;
+                console.log(total);
+            }
+        )
+    }
     return(
         <div id="viewport">
             <AdminNav />
@@ -180,6 +190,7 @@ const CategoryCreate = () => {
                     <div className="row">
                     {categories.filter(searched(search)).map((c) => (
                         <div key={c._id} className="ml-5 mb-2"> 
+                        {productCount(c._id)}
                         <Card
                             style={{ width: 300, marginTop: 16 }}
                             actions={[
