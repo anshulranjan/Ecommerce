@@ -40,3 +40,12 @@ export const productsCount = async () => {
     return await axios.post(`${process.env.REACT_APP_API}/products/total`);
 };
 
+export const productsWithCategory = async (productId) => {
+    return await axios.get(`${process.env.REACT_APP_API}/products/relatedcategory/${productId}`);
+};
+
+export const productsWithSubCategory = async (productId) => {
+    return await axios.get(`${process.env.REACT_APP_API}/products/relatedsubcategory/${productId}`);
+};
+
+

@@ -2,7 +2,8 @@ import React, {useEffect, useState} from "react";
 import { getProduct } from "../functions/product";
 import { Row, Col } from 'antd';
 import { SingleProduct } from "../components/singleproduct/SingleProduct";
-import { NewArrival } from "../components/Home/NewArrival";
+import { YouMayAlsoLike } from "../components/singleproduct/YouMayLike";
+import { SimilarProducts } from "../components/singleproduct/SimilarProducts";
 const Product = ({match}) => {
     const [product, setProduct] = useState({});
     const [loading, setLoading] = useState(true);
@@ -25,11 +26,11 @@ const Product = ({match}) => {
         </Row>
         </div>
         <div style={{backgroundColor:"#eee"}}>
-            <NewArrival />
+            {!loading && <SimilarProducts product={product} />}
+            {!loading && <YouMayAlsoLike product={product} />}
         </div>
         </>
     )
-
 
 }
 
