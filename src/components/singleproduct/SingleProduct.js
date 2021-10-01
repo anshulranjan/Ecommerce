@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Row, Card, Col, Input, Button, Collapse } from 'antd';
+import { Row, Card, Col, Input, Button, Collapse, Rate, Badge } from 'antd';
 import {Link} from "react-router-dom";
 import { HeartFilled, ShoppingCartOutlined,LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -16,6 +16,7 @@ export const SingleProduct = ({product}) => {
     const [error, setError] = useState("");
     const {images } = product;
     const { Panel } = Collapse;
+
 
 
     const onSearch = value =>{
@@ -42,6 +43,9 @@ export const SingleProduct = ({product}) => {
             });
         }
     };
+    const updateRating = (value) =>{
+        console.log(value);
+    }
     return(
         <>
             <Col span={12} className="p-4" >
@@ -50,8 +54,6 @@ export const SingleProduct = ({product}) => {
             </Carousel>
             </Col>
 
-
-            
             <Col span={12} className="p-4">
                 <div className="text-secondary">
                     <Link to="/home" className="link1">{product.category.name}</Link> {`>`} 
@@ -61,6 +63,11 @@ export const SingleProduct = ({product}) => {
                 <div style={{fontFamily:"sans-serif", fontSize:"22px", fontWeight:"inherit"}} className="mt-1">{product.title}</div>
                 <HeartFilled style={{fontSize:"40px" , color:"grey"}} className="p-2"/>
                 <div className="mt-1" style={{fontFamily:"sans-serif", fontSize:"30px", fontWeight:"bold"}}>Rs. {product.price}</div>
+                <div className="mt-1" >
+                    <Rate defaultValue={0} allowClear={false} disabled onChange={(value) => updateRating(value)}/>
+                    <br />
+                    <Badge className="site-badge-count-5 mt-2" size="large" count={8.4} style={{ backgroundColor: '#52c41a' }} />
+                </div>
                 {parseInt(product.quantity) < 10 && (
                                     <div className="mt-1" style={{fontFamily:"sans-serif", fontSize:"15px", fontWeight:"bold", color:"red"}}>
                                         Hurry!! Only a few left
@@ -106,7 +113,7 @@ export const SingleProduct = ({product}) => {
                 Add to Cart
                 </Button>
             </Col>
-            <div className ="container fluid">
+            <div className ="container fluid mb-2">
             <Collapse defaultActiveKey={['1']}>
                 <Panel header="Product Description" key="1">
                     <p>{product.description}</p>

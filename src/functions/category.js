@@ -36,6 +36,3 @@ export const getCategoriesSub = async (_id) => {
     return await axios.get(`${process.env.REACT_APP_API}/category/subcategory/${_id}`);
 };
 
-export const productsCountWithCategory = async (_id) => {
-    return await axios.get(`${process.env.REACT_APP_API}/product/category/${_id}`);
-};
