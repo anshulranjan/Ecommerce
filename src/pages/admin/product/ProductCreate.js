@@ -182,6 +182,8 @@ const ProductCreate = () => {
     }
     const onSelectCategory = (value) => {
         setValues({ ...values, category: value });
+        setValues({ ...values, subcategory: [] });
+        setBrand("");
         getCategoriesSub(value)
         .then(res =>{
             setSubOptions(res.data);
@@ -189,6 +191,7 @@ const ProductCreate = () => {
     }
     const onSelectSubCategory = (value) => {
         setValues({ ...values, subcategory: value });
+        setBrand("");
         getSubBrand(value)
         .then(res => {
             setBrandOptions(res.data)
@@ -307,7 +310,6 @@ const ProductCreate = () => {
 
             {subsOptions && subsOptions.length>0 && (
             <Form.Item
-                name="subcategory"
                 label="Sub Category"
                 className="ml-5"
                 rules={[
@@ -338,7 +340,6 @@ const ProductCreate = () => {
             )}
             {brandsOptions && brandsOptions.length>0 && (
             <Form.Item
-                name="brand"
                 label="Brand"
                 className="ml-5"
                 rules={[
@@ -353,13 +354,7 @@ const ProductCreate = () => {
                     value={brand}
                     name="brand"
                     onChange = {onSelectBrand}
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
-                    filterSort={(optionA, optionB) =>
-                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
-                    }
+                    
                 >
                 {brandsOptions.length>0 && brandsOptions.map((c) => (
                         <Option key={c._id} value={c._id} style={{backgroundColor:"white"}}>{c.name}</Option>

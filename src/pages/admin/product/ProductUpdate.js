@@ -49,7 +49,6 @@ const ProductUpdate = ({match, history}) => {
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     let allUploadedFiles = images;
-    console.log(allUploadedFiles.length)
 
     //load all categories
     useEffect(() => {
@@ -67,7 +66,7 @@ const ProductUpdate = ({match, history}) => {
             setSub(p.data.subcategory._id);
             setQuantity(p.data.quantity);
             setColor(p.data.color);
-            setBrand(p.data.brand);
+            setBrand(p.data.brand._id);
             setGender(p.data.gender);
             setShipping(p.data.shipping);
             loadSubCategory(p.data.category._id);
@@ -75,6 +74,7 @@ const ProductUpdate = ({match, history}) => {
             .then(res => {
                 setBrandOptions(res.data)
             })
+            
             setLoading(false);
         })
     }
