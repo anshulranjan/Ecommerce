@@ -6,6 +6,7 @@ import clothes from "./Clothes.png";
 import appliances from "./Appliance.png";
 import interiors from "./Interiors.png";
 import toys from "./Toys.png";
+import { Link } from "react-router-dom";
 import {getCategoriesSub} from "../../functions/category";
 const { SubMenu } = Menu;
 
@@ -70,7 +71,7 @@ export const HomeSubMenu = () =>{
                         {!loading && (
                                 <Menu.ItemGroup title="Electronics">
                                     {electronic.map((c) => (
-                                        <Menu.Item key={c._id} >{c.name}</Menu.Item>
+                                        <Menu.Item key={c._id} ><Link to={`/subcategory/product/search/${c._id}`}>{c.name}</Link></Menu.Item>
                                     ))}
                                 </Menu.ItemGroup>
                         )}
@@ -90,8 +91,8 @@ export const HomeSubMenu = () =>{
                         {!loading && (
                                 <Menu.ItemGroup title="Appliances">
                                     {appliance.map((c) => (
-                                        <Menu.Item key={c._id} >{c.name}</Menu.Item>
-                                    ))}
+                                        <Menu.Item key={c._id} ><Link to={`/subcategory/product/search/${c._id}`}>{c.name}</Link></Menu.Item>
+                                        ))}
                                 </Menu.ItemGroup>
                         )}
                         {loading && (
@@ -110,8 +111,8 @@ export const HomeSubMenu = () =>{
                         {!loading && (
                                 <Menu.ItemGroup title="Fashions">
                                     {fashions.map((c) => (
-                                        <Menu.Item key={c._id} >{c.name}</Menu.Item>
-                                    ))}
+                                        <Menu.Item key={c._id} ><Link to={`/subcategory/product/search/${c._id}`}>{c.name}</Link></Menu.Item>
+                                        ))}
                                 </Menu.ItemGroup>
                         )}
                         {loading && (
@@ -130,8 +131,8 @@ export const HomeSubMenu = () =>{
                         {!loading && (
                                 <Menu.ItemGroup title="Home Interiors">
                                     {homeinterior.map((c) => (
-                                        <Menu.Item key={c._id} >{c.name}</Menu.Item>
-                                    ))}
+                                        <Menu.Item key={c._id} ><Link to={`/subcategory/product/search/${c._id}`}>{c.name}</Link></Menu.Item>
+                                        ))}
                                 </Menu.ItemGroup>
                         )}
                         {loading && (
@@ -150,8 +151,8 @@ export const HomeSubMenu = () =>{
                         {!loading && (
                                 <Menu.ItemGroup title="Footwear">
                                     {footwears.map((c) => (
-                                        <Menu.Item key={c._id} >{c.name}</Menu.Item>
-                                    ))}
+                                        <Menu.Item key={c._id} ><Link to={`/subcategory/product/search/${c._id}`}>{c.name}</Link></Menu.Item>
+                                        ))}
                                 </Menu.ItemGroup>
                         )}
                         {loading && (
@@ -170,8 +171,8 @@ export const HomeSubMenu = () =>{
                         {!loading && (
                                 <Menu.ItemGroup title="Toys and More">
                                     {toysmore.map((c) => (
-                                        <Menu.Item key={c._id} >{c.name}</Menu.Item>
-                                    ))}
+                                        <Menu.Item key={c._id} ><Link to={`/subcategory/product/search/${c._id}`}>{c.name}</Link></Menu.Item>
+                                        ))}
                                 </Menu.ItemGroup>
                         )}
                         {loading && (

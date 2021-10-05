@@ -40,6 +40,8 @@ export const productsCount = async () => {
     return await axios.post(`${process.env.REACT_APP_API}/products/total`);
 };
 
+
+//search request
 export const productsWithCategory = async (productId) => {
     return await axios.get(`${process.env.REACT_APP_API}/products/relatedcategory/${productId}`);
 };
@@ -48,4 +50,15 @@ export const productsWithSubCategory = async (productId) => {
     return await axios.get(`${process.env.REACT_APP_API}/products/relatedsubcategory/${productId}`);
 };
 
+export const fetchByFilters = async (arg) => {
+    return await axios.post(`${process.env.REACT_APP_API}/search/filter/`,arg);
+};
+
+export const extractTheSubsProduct = async (subsId, page) => {
+    return await axios.get(`${process.env.REACT_APP_API}/products/extractbysubs/${subsId}`,{page});
+};
+
+export const extractTheCategoryProduct = async (catId, page) => {
+    return await axios.get(`${process.env.REACT_APP_API}/products/extractbycategory/${catId}`,{page});
+};
 

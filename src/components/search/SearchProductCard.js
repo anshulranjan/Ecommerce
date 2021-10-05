@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 
 const { Meta } = Card;
 
-export const ProductCard = ({product}) => {
+export const SearchProductCard = ({product}) => {
     var today = new Date();
     var createdDate = new Date(product.createdAt.substring(0,4), product.createdAt.substring(5,7)-1, product.createdAt.substring(8,10));
     var Difference_In_Time = today.getTime() - createdDate.getTime();
@@ -13,7 +13,7 @@ export const ProductCard = ({product}) => {
 
     return(
         <>
-            <Col span={4} key={product._id}>
+            <Col span={6} className="mt-2 mb-2" key={product._id}>
             <Link to={`/product/${product.slug}`}>
             {Difference_In_Days < 2 && (
                 <Badge.Ribbon text="New">

@@ -56,8 +56,8 @@ export const SingleProduct = ({product}) => {
 
             <Col span={12} className="p-4">
                 <div className="text-secondary">
-                    <Link to="/home" className="link1">{product.category.name}</Link> {`>`} 
-                    <Link to="/home" className="link1"> {product.subcategory.name}</Link>
+                    <Link to={`/category/product/search/${product.category._id}`} className="link1">{product.category.name}</Link> {`>`} 
+                    <Link to={`/subcategory/product/search/${product.subcategory._id}`} className="link1"> {product.subcategory.name}</Link>
                 </div>
                 <div className="mt-2" style={{color: "#bfbfbf" ,fontSize:"16px",fontWeight:"bold"}}>{product.brand.name.toUpperCase()}</div>
                 <div style={{fontFamily:"sans-serif", fontSize:"22px", fontWeight:"inherit"}} className="mt-1">{product.title}</div>

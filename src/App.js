@@ -28,6 +28,10 @@ import BrandUpdate from './pages/admin/brand/BrandUpdate';
 import ProductList from './pages/admin/product/ProductList';
 import ProductUpdate from './pages/admin/product/ProductUpdate';
 import Product from './pages/Product';
+import Shop from './components/search/Shop';
+import ShowSubCategoryProduct from './components/search/ShowSubCategoryProduct';
+import ShowCategoryProduct from './components/search/ShowCategoryProduct';
+
 const App = () => {
   const dispatch = useDispatch();
 
@@ -78,6 +82,9 @@ const App = () => {
       <Route exact path="/register/complete" component={RegisterComplete}></Route>
       <Route exact path="/forgot/password" component={ForgotPassword}></Route>
       <Route exact path="/product/:slug" component={Product}></Route>
+      <Route exact path="/shop" component={Shop}></Route>
+      <Route exact path="/subcategory/product/search/:subid" component={ShowSubCategoryProduct}></Route>
+      <Route exact path="/category/product/search/:catid" component={ShowCategoryProduct}></Route>
       <UserRoute exact path="/user/history" component={History}></UserRoute>
       <UserRoute exact path="/user/password" component={Password}></UserRoute>
       <UserRoute exact path="/user/wishlist" component={Wishlist}></UserRoute>
