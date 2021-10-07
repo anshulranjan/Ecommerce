@@ -38,11 +38,18 @@ const Shop = () => {
 
     const fetchProductByFilters = (text) => {
         setLoading(true);
-        fetchByFilters(text)
-        .then((res) => {
-            setProducts(res.data);
-            setLoading(false);
-        });
+        if(text.query.length == 0)
+        {
+            console.log("Hello");
+            loadAllProducts();
+        }
+        else{
+            fetchByFilters(text)
+            .then((res) => {
+                setProducts(res.data);
+                setLoading(false);
+            });
+        }
     };
 
     return (

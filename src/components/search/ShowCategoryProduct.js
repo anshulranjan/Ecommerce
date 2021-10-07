@@ -8,7 +8,7 @@ import {CloseOutlined} from "@ant-design/icons";
 const ShowCategoryProduct = ({match}) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [proCount, setProCount] = useState(12);
+    const [proCount, setProCount] = useState("");
     const [page, setPage] = useState(1);
     const {catid} = match.params;
     const arr = new Array(4);
@@ -23,8 +23,10 @@ const ShowCategoryProduct = ({match}) => {
     },[page]);
 
     const loadAllProducts = () =>{
+        setLoading(true);
         extractTheCategoryProduct(catid,page).then((res)=>{
-            setProducts(res.data);
+            setProducts(res.data.products);
+            setProCount(res.data.count);
             setLoading(false);
         })
     };

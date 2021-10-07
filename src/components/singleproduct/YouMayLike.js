@@ -18,7 +18,6 @@ export const YouMayAlsoLike = ({product}) =>{
         setLoading(true);
         productsWithCategory(product._id)
         .then(res => {
-            console.log(res.data);
             setProducts(res.data);
             setLoading(false);
         })
@@ -41,8 +40,8 @@ export const YouMayAlsoLike = ({product}) =>{
     }
 
     return(
-        <div className="p-2">
-            <Card title={<Title level={2}>You May Also Like</Title>} bordered={false} style={{ width: "100%" }}>
+        <div className="p-2" >
+            <Card title={<Title level={2}>You May Also Like</Title>} bordered={false} style={{ width: "100%" }} >
                 <Row>
                     {!loading && products.map((product) => 
                         (

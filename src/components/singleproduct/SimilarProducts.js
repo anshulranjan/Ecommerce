@@ -18,7 +18,6 @@ export const SimilarProducts = ({product}) =>{
         setLoading(true);
         productsWithSubCategory(product._id)
         .then(res => {
-            console.log(res.data);
             setProducts(res.data);
             setLoading(false);
         })
@@ -41,7 +40,7 @@ export const SimilarProducts = ({product}) =>{
     }
 
     return(
-        <div className="p-2">
+        <div className="p-2" key={product._id}>
             <Card title={<Title level={2}>Similar Products</Title>} bordered={false} style={{ width: "100%" }}>
                 <Row>
                     {!loading && products.map((product) => 

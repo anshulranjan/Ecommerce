@@ -55,10 +55,10 @@ export const fetchByFilters = async (arg) => {
 };
 
 export const extractTheSubsProduct = async (subsId, page) => {
-    return await axios.get(`${process.env.REACT_APP_API}/products/extractbysubs/${subsId}`,{page});
+    return await axios.post(`${process.env.REACT_APP_API}/products/extractbysubs/${subsId}`,{page});
 };
 
 export const extractTheCategoryProduct = async (catId, page) => {
-    return await axios.get(`${process.env.REACT_APP_API}/products/extractbycategory/${catId}`,{page});
+    return await axios.post(`${process.env.REACT_APP_API}/products/extractbycategory/${catId}`,{page});
 };
 

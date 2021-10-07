@@ -8,7 +8,7 @@ import {CloseOutlined} from "@ant-design/icons";
 const ShowSubCategoryProduct = ({match}) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [proCount, setProCount] = useState(12);
+    const [proCount, setProCount] = useState("");
     const [page, setPage] = useState(1);
     const {subid} = match.params;
     const arr = new Array(4);
@@ -23,8 +23,10 @@ const ShowSubCategoryProduct = ({match}) => {
     },[page]);
 
     const loadAllProducts = () =>{
+        setLoading(true);
         extractTheSubsProduct(subid,page).then((res)=>{
-            setProducts(res.data);
+            setProducts(res.data.products);
+            setProCount(res.data.count);
             setLoading(false);
         })
     };
