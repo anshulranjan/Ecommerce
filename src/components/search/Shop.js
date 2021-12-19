@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getProductsByCount, fetchByFilters } from "../../functions/product";
+import { getSubCategories } from "../../functions/subcategory";
 import { getCategories } from "../../functions/category";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchProductCard } from "./SearchProductCard";
@@ -11,8 +12,10 @@ const Shop = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [price, setPrice]= useState([0,0]);
-    const [categories, setCategories] = useState([])
+    const [categories, setCategories] = useState([]);
+    const [subs, setSubs] = useState([]);
     const [categoryIds, setCategoryIds] = useState([]);
+    const [subId, setSubId] = useState("");
     const [ok, setOk] = useState(false);
     let dispatch = useDispatch();
     const {search} = useSelector((state)=> ({... state}));
@@ -28,6 +31,7 @@ const Shop = () => {
     useEffect(() => {
         loadAllProducts();
         getCategories().then((res) => setCategories(res.data));
+        getSubCategories().then((res) => setSubs(res.data));
     },[]);
 
     const loadAllProducts = () =>{
@@ -36,6 +40,7 @@ const Shop = () => {
             setLoading(false);
         })
     };
+
 
     //load product on user search input
     useEffect(() => {
@@ -71,7 +76,9 @@ const Shop = () => {
             type:"SEARCH_QUERY",
             payload:{ text: "" }
         });
+        setCategoryIds([])
         setPrice(value);
+        setSubId("");
         setTimeout(() => {
             setOk(!ok);
         },300)
@@ -109,6 +116,7 @@ const Shop = () => {
           payload: { text: "" },
         });
         setPrice([0, 0]);
+        setSubId("");
         // console.log(e.target.value);
         let inTheState = [...categoryIds];
         let justChecked = e.target.value;
@@ -127,11 +135,34 @@ const Shop = () => {
         fetchProducts({ category: inTheState });
       };
 
+
+      //load products based on subs
+      const showSubs = () =>
+        subs.map((c) => (
+        <div key={c._id}
+            onClick={() => handleSubs(c)}
+            className="p-1 m-1 badge badge-secondary"
+            style={{cursor:"pointer"}}
+            >
+            {c.name}
+        </div>
+        ));
+    const handleSubs = (s) => {
+        setSubId(s);
+        dispatch({
+            type: "SEARCH_QUERY",
+            payload: { text: "" },
+          });
+          setPrice([0, 0]);
+          setCategoryIds([]);
+          fetchProducts({ sub: subId });
+    }
+
     return (
         <div className="container-fluid">
             <div className="row">
                 <div className="col-md-3 p-4">
-                    <Menu defaultOpenKeys={["1", "2"]} mode="inline">
+                    <Menu defaultOpenKeys={["1", "2", "3"]} mode="inline">
                     <span className="h5">Filters</span>
                     {/* price*/}
                     <SubMenu key="1" title={<span className="h6">PRICE</span>}>
@@ -141,8 +172,13 @@ const Shop = () => {
                     </SubMenu>
 
                     {/* categories */}
-                    <SubMenu key="2" title={<span className="h6">CATEGORIES</span>}>
+                    <SubMenu key="2" title={<span className="h6"><DownSquareOutlined />CATEGORIES</span>}>
                         <div style={{ maringTop: "-10px" }}>{showCategories()}</div>
+                    </SubMenu>
+
+                    {/* sub categories */}
+                    <SubMenu key="3" title={<span className="h6"><DownSquareOutlined />SUB CATEGORIES</span>}>
+                        <div style={{ maringTop: "-10px" }}>{showSubs()}</div>
                     </SubMenu>
                     </Menu>
                 </div>
