@@ -5,7 +5,7 @@ import { getCategories } from "../../functions/category";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchProductCard } from "./SearchProductCard";
 import {SearchLoadingCard} from "./SearchLoadingCard";
-import { Menu, Slider, Row, Pagination, Checkbox } from 'antd';
+import { Menu, Slider, Row, Pagination, Checkbox, Radio } from 'antd';
 import {CloseOutlined, DownSquareOutlined} from "@ant-design/icons";
 
 const Shop = () => {
@@ -16,6 +16,12 @@ const Shop = () => {
     const [subs, setSubs] = useState([]);
     const [categoryIds, setCategoryIds] = useState([]);
     const [subId, setSubId] = useState("");
+    const [shippings, setShippings]  = useState(["Yes","No",]);
+    const [colors, setColors]= useState([
+        "Black","Red","Green","Silver","White","Blue","Yellow","Grey",
+    ]);
+    const [color, setColor] = useState("");
+    const [shipping, setShipping] = useState("");
     const [ok, setOk] = useState(false);
     let dispatch = useDispatch();
     const {search} = useSelector((state)=> ({... state}));
@@ -79,6 +85,8 @@ const Shop = () => {
         setCategoryIds([])
         setPrice(value);
         setSubId("");
+        setShipping("");
+        setColor("");
         setTimeout(() => {
             setOk(!ok);
         },300)
@@ -117,6 +125,8 @@ const Shop = () => {
         });
         setPrice([0, 0]);
         setSubId("");
+        setShipping("");
+        setColor("");
         // console.log(e.target.value);
         let inTheState = [...categoryIds];
         let justChecked = e.target.value;
@@ -155,17 +165,79 @@ const Shop = () => {
           });
           setPrice([0, 0]);
           setCategoryIds([]);
+          setShipping("");
+          setColor("");
           fetchProducts({ sub: subId });
     }
+    // filter by colors
+    const showColors = () => colors.map((c) => (
+        <Radio 
+        value={c}
+        name={c}
+        checked={c===color}
+        onChange = {handleColor}
+        className="pb-2 pl-4 pr-4"
+        >{c}</Radio>
+    ))
+    const handleColor = (e) =>{
+        dispatch({
+            type: "SEARCH_QUERY",
+            payload: { text: "" },
+          });
+          setPrice([0, 0]);
+          setSubId("");
+          setCategoryIds([]);
+          setColor(e.target.value);
+          setShipping("");
+          fetchProducts({color: e.target.value})
+
+    }
+
+    //filter by shippings
+    const showShippings = () => shippings.map((c) => (
+        <>
+        <Checkbox
+        className="pb-2 pl-4 pr-4"
+        onChange={handleShipping}
+        value="Yes"
+        checked={shipping === "Yes"}
+      >
+        Yes
+      </Checkbox>
+
+      <Checkbox
+        className="pb-2 pl-4 pr-4"
+        onChange={handleShipping}
+        value="No"
+        checked={shipping === "No"}
+      >
+        No
+      </Checkbox>
+      </>
+    ))
+    const handleShipping = (e) =>{
+        dispatch({
+            type: "SEARCH_QUERY",
+            payload: { text: "" },
+          });
+          setPrice([0, 0]);
+          setSubId("");
+          setColor("");
+          setCategoryIds([]);
+          setColor(e.target.value);
+          fetchProducts({shipping: e.target.value})
+
+    }
+
 
     return (
         <div className="container-fluid">
             <div className="row">
                 <div className="col-md-3 p-4">
-                    <Menu defaultOpenKeys={["1", "2", "3"]} mode="inline">
+                    <Menu defaultOpenKeys={["1", "2", "3", "4", "5"]} mode="inline">
                     <span className="h5">Filters</span>
                     {/* price*/}
-                    <SubMenu key="1" title={<span className="h6">PRICE</span>}>
+                    <SubMenu key="1" title={<span className="h6"><DownSquareOutlined />PRICE</span>}>
                         <div>
                             <Slider className="ml-4 mr-4" tipFormatter={(v) => `Rs. ${v}`} range value={price} onChange={handleSlider} max="200000" />
                         </div>
@@ -179,6 +251,16 @@ const Shop = () => {
                     {/* sub categories */}
                     <SubMenu key="3" title={<span className="h6"><DownSquareOutlined />SUB CATEGORIES</span>}>
                         <div style={{ maringTop: "-10px" }}>{showSubs()}</div>
+                    </SubMenu>
+
+                    {/* color */}
+                    <SubMenu key="4" title={<span className="h6"><DownSquareOutlined />COLOR</span>}>
+                        <div style={{ maringTop: "-10px" }} className="pr-5">{showColors()}</div>
+                    </SubMenu>
+
+                    {/* shipping */}
+                    <SubMenu key="5" title={<span className="h6"><DownSquareOutlined />SHIPPING</span>}>
+                        <div style={{ maringTop: "-10px" }} className="pr-5">{showShippings()}</div>
                     </SubMenu>
                     </Menu>
                 </div>
