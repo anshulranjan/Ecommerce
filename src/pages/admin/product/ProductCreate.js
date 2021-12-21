@@ -16,12 +16,11 @@ const initState = {
     title:'',
     description:'',
     price:'',
-    category:'',
     images:[],
     categories:[],
     subcategory:[],
     quantity:'',
-    colors:["Black","Red","Green","Silver","White","Blue","Yellow","Black","Grey"],
+    colors:["Black","Red","Green","Silver","White","Blue","Yellow","Grey"],
 };
 const formItemLayout = {
     labelCol: {
@@ -34,11 +33,12 @@ const formItemLayout = {
 
 const ProductCreate = () => {
     const [values, setValues] = useState(initState);
-    const {title, images, description, price, category, categories, subcategory, quantity, colors} = values;
+    const {title, images, description, price, categories, subcategory, quantity, colors} = values;
     const [wait, setWait] = useState(false);
     const { TextArea } = Input;
     const { Option } = Select;
     const [color, setColor] = useState("");
+    const [category, setCategory] = useState("");
     const [brand, setBrand] = useState("");
     const [gender, setGender] = useState("");
     const [shipping, setShipping] = useState("");
@@ -104,7 +104,7 @@ const ProductCreate = () => {
 
        }
        setWait(true);
-       createProduct({values, color, shipping, gender, brand},user.token)
+       createProduct({values, color, shipping, category, gender, brand},user.token)
        .then(res=>{
            console.log(res)
            setWait(false);
@@ -181,7 +181,7 @@ const ProductCreate = () => {
         setShipping(value);
     }
     const onSelectCategory = (value) => {
-        setValues({ ...values, category: value });
+        setCategory(value);
         setValues({ ...values, subcategory: [] });
         setBrand("");
         getCategoriesSub(value)
