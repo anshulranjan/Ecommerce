@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { extractTheCategoryProduct } from "../../functions/product";
-import { getCategory } from "../../functions/category";
+import { getCategoryById, getCategories } from "../../functions/category";
 import { SearchProductCard } from "./SearchProductCard";
 import {SearchLoadingCard} from "./SearchLoadingCard";
 import { Card, Typography, Row, Pagination } from 'antd';
 import {CloseOutlined} from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const ShowCategoryProduct = ({match}) => {
     const [products, setProducts] = useState([]);
@@ -12,6 +13,7 @@ const ShowCategoryProduct = ({match}) => {
     const [proCount, setProCount] = useState("");
     const [page, setPage] = useState(1);
     const [catname, setCatName] = useState("");
+    const [categories, setCategories] = useState([]);
     const {catid} = match.params;
     const arr = new Array(4);
     var elements=[];
@@ -22,12 +24,13 @@ const ShowCategoryProduct = ({match}) => {
     }
     useEffect(() => {
         loadAllProducts();
-    },[page]);
+        getCategories().then((res) => setCategories(res.data));
+    },[page, catid]);
 
     const loadAllProducts = () =>{
         setLoading(true);
-        getCategory(catid).then((res)=>{
-            console.log(res.data);
+        getCategoryById(catid).then((res)=>{
+            setCatName(res.data.name);
         })
         extractTheCategoryProduct(catid,page).then((res)=>{
             setProducts(res.data.products);
@@ -35,14 +38,29 @@ const ShowCategoryProduct = ({match}) => {
             setLoading(false);
         })
     };
+    const showCategories = () =>
+        categories.map((c) => (
+        <div key={c._id}
+            className="p-2 m-2"
+            style={{cursor:"pointer"}}
+        >
+        <Link to ={`/category/product/search/${c._id}`} style={{"color":"black"}}><h6>{c.name} </h6></Link>
+        </div>
+    ));
 
     return (
         <div className="container-fluid">
             <div className="row">
                 <div className="col-md-3">
-                    Search/Filter Menu
+                    <h4 className="m-3">Categories</h4>
+                    <div style={{ maringTop: "-10px" }}>{showCategories()}</div>
                 </div>
                 <div className="col-md-9">
+                    {!loading && (
+                        <h3 className="p-3">
+                            All Products for "{catname}" Category
+                        </h3>
+                    )}
                     <Row>
                     { loading &&  elements}
                     {!loading && products.length<1 && 

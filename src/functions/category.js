@@ -36,3 +36,7 @@ export const getCategoriesSub = async (_id) => {
     return await axios.get(`${process.env.REACT_APP_API}/category/subcategory/${_id}`);
 };
 
+export const getCategoryById = async (_id) => {
+    return await axios.get(`${process.env.REACT_APP_API}/categoryById/${_id}`);
+};
+
