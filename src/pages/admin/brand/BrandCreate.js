@@ -328,6 +328,7 @@ const BrandCreaate = () => {
                         {allSubs.find(({ _id }) => _id === c.parentSub).name ? (
                             <p>Sub Category: {allSubs.find(({ _id }) => _id === c.parentSub).name}</p>) : "Loading Failed. Try Again"
                         }
+                        
                         </Skeleton>
                         </Card>
                         </div>

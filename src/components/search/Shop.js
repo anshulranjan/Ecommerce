@@ -196,26 +196,18 @@ const Shop = () => {
     //filter by shippings
     const showShippings = () => shippings.map((c) => (
         <>
-        <Checkbox
+        <Radio
         className="pb-2 pl-4 pr-4"
         onChange={handleShipping}
-        value="Yes"
-        checked={shipping === "Yes"}
+        value={c}
+        checked={c === shipping}
       >
-        Yes
-      </Checkbox>
-
-      <Checkbox
-        className="pb-2 pl-4 pr-4"
-        onChange={handleShipping}
-        value="No"
-        checked={shipping === "No"}
-      >
-        No
-      </Checkbox>
+        {c}
+      </Radio>
       </>
     ))
     const handleShipping = (e) =>{
+        setShipping(e.target.value)
         dispatch({
             type: "SEARCH_QUERY",
             payload: { text: "" },
@@ -224,7 +216,7 @@ const Shop = () => {
           setSubId("");
           setColor("");
           setCategoryIds([]);
-          setColor(e.target.value);
+          setColor("");
           fetchProducts({shipping: e.target.value})
 
     }

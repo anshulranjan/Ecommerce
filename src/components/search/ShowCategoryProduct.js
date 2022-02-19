@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { extractTheCategoryProduct } from "../../functions/product";
+import { getCategory } from "../../functions/category";
 import { SearchProductCard } from "./SearchProductCard";
 import {SearchLoadingCard} from "./SearchLoadingCard";
 import { Card, Typography, Row, Pagination } from 'antd';
@@ -10,6 +11,7 @@ const ShowCategoryProduct = ({match}) => {
     const [loading, setLoading] = useState(true);
     const [proCount, setProCount] = useState("");
     const [page, setPage] = useState(1);
+    const [catname, setCatName] = useState("");
     const {catid} = match.params;
     const arr = new Array(4);
     var elements=[];
@@ -24,6 +26,9 @@ const ShowCategoryProduct = ({match}) => {
 
     const loadAllProducts = () =>{
         setLoading(true);
+        getCategory(catid).then((res)=>{
+            console.log(res.data);
+        })
         extractTheCategoryProduct(catid,page).then((res)=>{
             setProducts(res.data.products);
             setProCount(res.data.count);
