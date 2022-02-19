@@ -53,12 +53,12 @@ const ShowCategoryProduct = ({match}) => {
             <div className="row">
                 <div className="col-md-3">
                     <h4 className="m-3">Categories</h4>
-                    <div style={{ maringTop: "-10px" }}>{showCategories()}</div>
+                    <div style={{ maringTop: "-10px", "height":"500px","overflow":"scroll" }}>{showCategories()}</div>
                 </div>
                 <div className="col-md-9">
                     {!loading && (
                         <h3 className="p-3">
-                            All Products for "{catname}" Category
+                            All Products of "{catname}" Category
                         </h3>
                     )}
                     <Row>
