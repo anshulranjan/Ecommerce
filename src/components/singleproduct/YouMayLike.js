@@ -40,7 +40,7 @@ export const YouMayAlsoLike = ({product}) =>{
     }
 
     return(
-        <div className="p-2" >
+        <div className="p-2">
             <Card title={<Title level={2}>You May Also Like</Title>} bordered={false} style={{ width: "100%" }} >
                 <Row>
                     {!loading && products.map((product) => 

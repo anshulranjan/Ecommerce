@@ -20,7 +20,6 @@ export const BestSeller = () =>{
         setLoading(true);
         getProducts('sold',"desc", page)
         .then(res => {
-            console.log(res.data);
             setProducts(res.data);
             setLoading(false);
         })
@@ -44,7 +43,7 @@ export const BestSeller = () =>{
 
     return(
         <div className="p-2">
-            <Card title={<Title level={2}>Best Sellers</Title>} bordered={false} extra={<a href="#">View All</a>} style={{ width: "100%" }}>
+            <Card title={<Title level={2}>Best Sellers</Title>} bordered={false} style={{ width: "100%" }}>
                 <Row>
                     {!loading && products.map((product) => 
                         (

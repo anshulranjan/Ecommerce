@@ -5,6 +5,7 @@ import { HeartFilled, ShoppingCartOutlined,LoadingOutlined } from "@ant-design/i
 import axios from "axios";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
+import _ from "lodash";
 
 export const SingleProduct = ({product}) => {
     const { Search } = Input;
@@ -14,10 +15,13 @@ export const SingleProduct = ({product}) => {
     const [district, setDistrict] = useState("");
     const [state, setState] = useState("");
     const [error, setError] = useState("");
+    const [productincart, setProductincart] = useState(false);
     const {images } = product;
     const { Panel } = Collapse;
 
-
+    useEffect(() => {
+        
+    },[]);
 
     const onSearch = value =>{
         setPincode(value);
@@ -32,10 +36,17 @@ export const SingleProduct = ({product}) => {
             setError("");
             axios.get(`https://api.postalpincode.in/pincode/${value}`)
             .then(res => {
-                console.log(res);
-                setState(res.data[0].PostOffice[0].State);
-                setCity(res.data[0].PostOffice[0].Block);
-                setDistrict(res.data[0].PostOffice[0].District);
+                if(res.data[0].Message === "No records found")
+                {
+                    setError("No records found");
+                    setCity("")
+                }
+                else{
+                    setError("")
+                    setState(res.data[0].PostOffice[0].State);
+                    setCity(res.data[0].PostOffice[0].Block);
+                    setDistrict(res.data[0].PostOffice[0].District);
+                }
                 setLoading(false);
             })
             .catch(err => {
@@ -43,8 +54,31 @@ export const SingleProduct = ({product}) => {
             });
         }
     };
+
+    //star ratings
     const updateRating = (value) =>{
         console.log(value);
+    }
+
+    //add to cart
+    const handleAddToCart = () =>{
+        let cart = []
+        if(typeof window !== 'undefined')
+        {
+            if(localStorage.getItem('cart')){
+                cart = JSON.parse(localStorage.getItem('cart'))
+
+            }
+            //push new product to cart
+            cart.push({
+                ...product,
+                count:1,
+            })
+            //remove duplicates
+            let unique = _.uniqWith(cart, _.isEqual)
+            localStorage.setItem('cart',JSON.stringify(unique));
+            setProductincart(true);
+        }
     }
     return(
         <>
@@ -89,7 +123,7 @@ export const SingleProduct = ({product}) => {
                 )}
                 {error.length>0 && (
                     <div className="mt-1" style={{fontFamily:"sans-serif", fontSize:"12px", fontWeight:"initial", color:"red"}}>
-                        Pincode must be of 6 digit
+                        {error}
                     </div>
 
                 )}
@@ -98,9 +132,22 @@ export const SingleProduct = ({product}) => {
                         Pincode for {city} {district} {state} Verified Successfully.
                     </div>
                 )}
+                {productincart && (<Button 
+                    //onClick={handleAddToCart}
+                    type="primary"
+                    style={{ background: "#52c41a", borderColor: "#52c41a", width:300 }}
+                    shape="round"
+                    className = "mt-4"
+                    block
+                    icon = {<ShoppingCartOutlined />}
+                    size="large"
+                >
+                Go to Cart
+                </Button>
+                )}
 
-                <Button 
-                    //onClick={googleLogin}
+                {!productincart && (<Button 
+                    onClick={handleAddToCart}
                     type="danger"
                     shape="round"
                     className = "mt-4"
@@ -112,11 +159,12 @@ export const SingleProduct = ({product}) => {
                 >
                 Add to Cart
                 </Button>
+                )}
             </Col>
             <div className ="container fluid mb-2">
             <Collapse defaultActiveKey={['1']}>
                 <Panel header="Product Description" key="1">
-                    <p>{product.description}</p>
+                    <p style={{whiteSpace:"pre-line"}}>{product.description}</p>
                 </Panel>
             </Collapse>
             </div>

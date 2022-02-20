@@ -131,7 +131,7 @@ const ProductCreate = () => {
    
     const uploadImage = ({ file, onSuccess, data}) =>{
             setUploading(true);
-            Resizer.imageFileResizer(file,720,720,"JPEG",100,0,(uri) => {
+            Resizer.imageFileResizer(file,1080,1080,"JPEG",100,0,(uri) => {
                 axios.post(`${process.env.REACT_APP_API}/uploadimages`,{image:uri},{
                     headers:{
                         authtoken: user.token
@@ -263,7 +263,7 @@ const ProductCreate = () => {
                 
             >
             <TextArea name="description" rows={6} placeholder="Enter the Product description" value={description}
-                onChange = {handleChange}/>
+                onChange = {handleChange} style={{whiteSpace: "pre-wrap"}}/>
             </Form.Item>
 
 
