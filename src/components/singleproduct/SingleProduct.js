@@ -6,9 +6,14 @@ import axios from "axios";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import _ from "lodash";
+import { useSelector, useDispatch } from "react-redux";
 
 export const SingleProduct = ({product}) => {
     const { Search } = Input;
+    //redux initialize
+    const {user, cart} = useSelector((state) => ({...state}))
+    const dispatch = useDispatch();
+
     const [loading, setLoading] = useState(false);
     const [pincode, setPincode] = useState("");
     const [city, setCity] = useState("");
@@ -20,9 +25,18 @@ export const SingleProduct = ({product}) => {
     const { Panel } = Collapse;
 
     useEffect(() => {
-        
-    },[]);
+        const cartValue = JSON.parse(localStorage.getItem('cart'))
+        const found = cartValue.some(el => el._id === product._id);
+        if(found)
+        {
+            setProductincart(true)
+        }
+        else{
+            setProductincart(false)
+        }
+    },[product]);
 
+    //search PIN Code
     const onSearch = value =>{
         setPincode(value);
         if (value.length !== 6) {
@@ -77,6 +91,12 @@ export const SingleProduct = ({product}) => {
             //remove duplicates
             let unique = _.uniqWith(cart, _.isEqual)
             localStorage.setItem('cart',JSON.stringify(unique));
+            //add to redux state
+            dispatch({
+                type:"ADD_TO_CART",
+                payload: unique,
+            })
+
             setProductincart(true);
         }
     }
