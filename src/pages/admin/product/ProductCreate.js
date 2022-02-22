@@ -20,6 +20,8 @@ const initState = {
     categories:[],
     subcategory:[],
     quantity:'',
+    delivery:'',
+    discount:'',
     colors:["Black","Red","Green","Silver","White","Blue","Yellow","Grey"],
 };
 const formItemLayout = {
@@ -33,7 +35,7 @@ const formItemLayout = {
 
 const ProductCreate = () => {
     const [values, setValues] = useState(initState);
-    const {title, images, description, price, categories, subcategory, quantity, colors} = values;
+    const {title, images, description, price, delivery, discount, categories, subcategory, quantity, colors} = values;
     const [wait, setWait] = useState(false);
     const { TextArea } = Input;
     const { Option } = Select;
@@ -104,7 +106,7 @@ const ProductCreate = () => {
 
        }
        setWait(true);
-       createProduct({values, color, shipping, category, gender, brand},user.token)
+       createProduct({values, color, shipping, delivery, discount, category, gender, brand},user.token)
        .then(res=>{
            console.log(res)
            setWait(false);
@@ -275,6 +277,26 @@ const ProductCreate = () => {
                 className="ml-5"
             >
             <Input name="price" placeholder="Enter the Product Price" value={price}
+                onChange = {handleChange}/>
+            </Form.Item>
+
+            <Form.Item
+                name="discount"
+                label="Discount"
+                rules={[{ whitespace: true }]}
+                className="ml-5"
+            >
+            <Input name="discount" placeholder="Enter the Product Discount Value" value={discount}
+                onChange = {handleChange}/>
+            </Form.Item>
+
+            <Form.Item
+                name="delivery"
+                label="Delivery Cost"
+                rules={[{  whitespace: true }]}
+                className="ml-5"
+            >
+            <Input name="delivery" placeholder="Enter Delivery Charges" value={delivery}
                 onChange = {handleChange}/>
             </Form.Item>
 

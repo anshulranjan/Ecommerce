@@ -36,6 +36,8 @@ const ProductUpdate = ({match, history}) => {
     const [images, setImages] = useState([]);
     const [description, setDes] = useState("");
     const [price, setPrice] = useState("");
+    const [delivery, setDelivery] = useState("");
+    const [discount, setDiscount] = useState("");
     const [category, setCategory] = useState("");
     const [subcategory, setSub] = useState("");
     const [quantity, setQuantity] = useState("");
@@ -58,10 +60,13 @@ const ProductUpdate = ({match, history}) => {
     const loadProduct = () =>{
         getProduct(match.params.slug)
         .then(p => {
+            console.log(p.data)
             setImages(p.data.images);
             setTitle(p.data.title);
             setDes(p.data.description);
             setPrice(p.data.price);
+            setDelivery(p.data.delivery);
+            setDiscount(p.data.discount);
             setCategory(p.data.category._id);
             setSub(p.data.subcategory._id);
             setQuantity(p.data.quantity);
@@ -136,7 +141,7 @@ const ProductUpdate = ({match, history}) => {
 
        }
        setWait(true);
-       updateProduct(match.params.slug, {images,title, description, price, quantity, category, subcategory, color, gender, brand, shipping}, user.token)
+       updateProduct(match.params.slug, {images,title, delivery, discount, description, price, quantity, category, subcategory, color, gender, brand, shipping}, user.token)
         .then(res => {
             toast.success(`"${res.data.title}" updated successfully`, {
                 position: "top-right",
@@ -217,6 +222,12 @@ const ProductUpdate = ({match, history}) => {
     };
     const handleChangePrice = (e) => {
         setPrice(e.target.value);
+    };
+    const handleChangeDelivery = (e) => {
+        setDelivery(e.target.value);
+    };
+    const handleChangeDiscount = (e) => {
+        setDiscount(e.target.value);
     };
     const handleChangeQuantity = (e) => {
         setQuantity(e.target.value);
@@ -321,6 +332,24 @@ const ProductUpdate = ({match, history}) => {
             >
             <Input name="price" placeholder="Enter the Product Price" value={price}
                 onChange = {handleChangePrice}/>
+            </Form.Item>
+
+            <Form.Item
+                label="Discount"
+                rules={[{ whitespace: true }]}
+                className="ml-5"
+            >
+            <Input name="discount" placeholder="Enter the Product Discount Value" value={discount}
+                onChange = {handleChangeDiscount}/>
+            </Form.Item>
+
+            <Form.Item
+                label="Delivery Cost"
+                rules={[{  whitespace: true }]}
+                className="ml-5"
+            >
+            <Input name="delivery" placeholder="Enter Delivery Charges" value={delivery}
+                onChange = {handleChangeDelivery}/>
             </Form.Item>
 
             <Form.Item
