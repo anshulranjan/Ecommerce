@@ -29,6 +29,7 @@ import ProductList from './pages/admin/product/ProductList';
 import ProductUpdate from './pages/admin/product/ProductUpdate';
 import Product from './pages/Product';
 import Shop from './components/search/Shop';
+import Cart from './pages/Cart';
 import ShowSubCategoryProduct from './components/search/ShowSubCategoryProduct';
 import ShowCategoryProduct from './components/search/ShowCategoryProduct';
 
@@ -83,6 +84,7 @@ const App = () => {
       <Route exact path="/forgot/password" component={ForgotPassword}></Route>
       <Route exact path="/product/:slug" component={Product}></Route>
       <Route exact path="/shop" component={Shop}></Route>
+      <Route exact path="/cart" component={Cart}></Route>
       <Route exact path="/subcategory/product/search/:subid" component={ShowSubCategoryProduct}></Route>
       <Route exact path="/category/product/search/:catid" component={ShowCategoryProduct}></Route>
       <UserRoute exact path="/user/history" component={History}></UserRoute>

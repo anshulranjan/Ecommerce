@@ -25,14 +25,16 @@ export const SingleProduct = ({product}) => {
     const { Panel } = Collapse;
 
     useEffect(() => {
-        const cartValue = JSON.parse(localStorage.getItem('cart'))
-        const found = cartValue.some(el => el._id === product._id);
-        if(found)
-        {
-            setProductincart(true)
-        }
-        else{
-            setProductincart(false)
+        if(cart.length){
+            const cartValue = JSON.parse(localStorage.getItem('cart'))
+            const found = cartValue.some(el => el._id === product._id);
+            if(found)
+            {
+                setProductincart(true)
+            }
+            else{
+                setProductincart(false)
+            }
         }
     },[product]);
 
