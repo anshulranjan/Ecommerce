@@ -41,6 +41,10 @@ const Cart = () =>{
         return getTotalCartValue() - getDiscountValue() + getDeliveryCharge();
 
     }
+    //save order to db
+    const saveOrderToDb = () => {
+
+    }
     return(
         <div className="container-fluid" style={{backgroundColor:"#eee", width:"100%", height:"100vh"}}>
             {!cart.length ? (
@@ -92,10 +96,17 @@ const Cart = () =>{
 
 
                                 {user ? (
-                                    <Col span={12}> <Button className="mt-4" type="primary">Proceed to Checkout</Button> </Col>                            
+                                    <Col span={12}> <Button onClick={saveOrderToDb} disabled={!cart.length} className="mt-4" type="primary">
+                                        Proceed to Checkout</Button> 
+                                    </Col>                            
                                 )
                                 : (
-                                    <Col span={12}><Button className="mt-4" type="primary">Login to Checkout</Button></Col>
+                                    <Col span={12}><Button className="mt-4" type="primary">
+                                        <Link to={{
+                                            pathname: "/login",
+                                            state: {from :"cart"},
+                                        }}>
+                                        Login to Checkout</Link></Button></Col>
                                 )}
                             </Row>
                         </Card>
