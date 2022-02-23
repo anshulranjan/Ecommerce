@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import cartimage from "./cartImage.png";
 import { Card, Row, Col, Typography, Button } from 'antd';
+import ModalImage from 'react-modal-image';
 const { Title } = Typography;
 
 const Cart = () =>{
@@ -41,6 +42,64 @@ const Cart = () =>{
         return getTotalCartValue() - getDiscountValue() + getDeliveryCharge();
 
     }
+
+    //calculate discount rate
+    const calculateDiscountRate = (c, d) =>{
+        return Number(((d/c)*100).toFixed(0));
+    }
+    //show cart items
+    const showCartItems = () =>(
+        <>
+        {cart.map((c,i) =>{ 
+            return (
+            <>
+            <Col className="mt-5" key ={i} span={3} style={{width:"100px", height:"auto"}}>
+                {c.images.length ? (
+                    <ModalImage small={c.images[0].url} large={c.images[0].url} />
+                ) : (
+                    <>
+                    </>
+                )}
+            </Col>
+
+            <Col className="mt-5 ml-4" span={14}>
+                <div style={{fontFamily:"sans-serif", fontSize:"16px"}}>{c.title.substring(0,60)}...</div>
+                <div style={{fontFamily:"sans-serif", fontSize:"14px", color:"grey"}}>{c.brand.name}</div>
+                {c.discount ? (
+                    <>
+                        
+                        <b style={{fontFamily:"sans-serif", fontSize:"18px"}} >Rs. {c.price - c.discount}</b>
+                        <span className="ml-1" style={{color:"grey", fontSize:"14px"}}> <strike>Rs.{c.price}</strike> </span>
+                        <span className="ml-2" style={{color:"green", fontSize:"14px", fontWeight:"bolder"}}> {calculateDiscountRate(c.price, c.discount)} % off</span>
+                    </>
+                ) : (
+                    <>
+                        <div style={{fontFamily:"sans-serif", fontSize:"18px"}}>
+                        <b>Rs. {c.price}</b></div>
+                    </>
+                )}
+                <Row className="mt-2" justify="space-between">
+                    <Col span={8}>Quanitity</Col>
+                    <Col span={8}>
+                        <Link to="/shop"><h6 style={{color:"blue"}}>REMOVE</h6></Link>
+                    </Col>
+                </Row>
+            </Col>
+
+            <Col className="mt-5" span={6}>
+                <p style={{fontSize:"14px"}}> Delivery in {Math.floor(Math.random() * 10)} days | {c.delivery ? (
+                    <>
+                        <span>Rs. {c.delivery}</span>
+                    </>
+                ) : (
+                    <span style={{color:"green", fontSize:"14px", fontWeight:"bolder"}}> FREE</span>
+                )}</p>
+            </Col>
+            </>
+        )})
+        }
+        </>
+    )
     //save order to db
     const saveOrderToDb = () => {
 
@@ -68,12 +127,7 @@ const Cart = () =>{
                     <div className="pt-2 pl-2 pb-2">
                         <Card title={<Title level={4}>My  Cart ({cart.length})</Title>} bordered={false} style={{ width: "100%" }}>
                             <Row>
-                                <div className="text-center">
-                                <img src={cartimage} alt="" style={{width:"30%", height:"55%"}} className= "m-1" />  
-                                <br />
-                                <h2>Your Cart is empty! </h2>
-                                <Link to="/shop"><h4 style={{color:"blue"}}>Shop Now</h4></Link>
-                                </div>
+                                {showCartItems()}
                             </Row>
                         </Card>
                     </div>
