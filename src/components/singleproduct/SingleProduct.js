@@ -172,7 +172,7 @@ export const SingleProduct = ({product}) => {
                 Product Sold Out
                 </Button>
                 )}
-                {productincart && product.shipping == "Yes" && product.quantity > 0 && (<Button 
+                {productincart && product.shipping == "Yes" && product.quantity > 0 && (<Link to="/cart"><Button 
                     //onClick={handleAddToCart}
                     type="primary"
                     style={{ background: "#52c41a", borderColor: "#52c41a", width:300 }}
@@ -184,6 +184,7 @@ export const SingleProduct = ({product}) => {
                 >
                 Go to Cart
                 </Button>
+                </Link>
                 )}
 
                 {!productincart && product.quantity > 0 && product.shipping == "Yes" && (<Button 

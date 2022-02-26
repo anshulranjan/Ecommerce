@@ -102,6 +102,15 @@ const Cart = () =>{
                 type: "ADD_TO_CART",
                 payload: cart,
             });
+            toast.error(`Item removed successfully.`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
     }
     //show cart items
