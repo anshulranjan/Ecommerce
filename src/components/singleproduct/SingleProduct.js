@@ -154,7 +154,25 @@ export const SingleProduct = ({product}) => {
                         Pincode for {city} {district} {state} Verified Successfully.
                     </div>
                 )}
-                {productincart && (<Button 
+                {product.shipping == "No" && (
+                    <div className="mt-1" style={{fontFamily:"sans-serif", fontSize:"20px", fontWeight:"initial", color:"red"}}>
+                        Shipping of this product is currently not available
+                    </div>
+
+                )}
+                {product.quantity == 0 && (<Button 
+                    //onClick={handleAddToCart}
+                    type="primary"
+                    style={{ background: "#d48806", borderColor: "#d48806", width:300 }}
+                    shape="round"
+                    className = "mt-4"
+                    block
+                    size="large"
+                >
+                Product Sold Out
+                </Button>
+                )}
+                {productincart && product.shipping == "Yes" && product.quantity > 0 && (<Button 
                     //onClick={handleAddToCart}
                     type="primary"
                     style={{ background: "#52c41a", borderColor: "#52c41a", width:300 }}
@@ -168,7 +186,7 @@ export const SingleProduct = ({product}) => {
                 </Button>
                 )}
 
-                {!productincart && (<Button 
+                {!productincart && product.quantity > 0 && product.shipping == "Yes" && (<Button 
                     onClick={handleAddToCart}
                     type="danger"
                     shape="round"

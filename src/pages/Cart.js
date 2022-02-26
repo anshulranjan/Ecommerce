@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import cartimage from "./cartImage.png";
 import { Card, Row, Col, Typography, Button } from 'antd';
 import ModalImage from 'react-modal-image';
+import {toast} from "react-toastify";
+
 const { Title } = Typography;
 
 const Cart = () =>{
@@ -47,6 +49,61 @@ const Cart = () =>{
     const calculateDiscountRate = (c, d) =>{
         return Number(((d/c)*100).toFixed(0));
     }
+
+    //handle quantity change
+    const handleQuantityChange = (e, c) => {
+        let count = e.target.value < 1 ? 1 : e.target.value
+        if(count>c.quantity)
+        {
+            toast.error(`You can maximum order ${c.quantity} quantity of this item`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return;
+        }
+        let cart = []
+        if(typeof window !== 'undefined')
+        {
+            if(localStorage.getItem('cart')){
+                cart = JSON.parse(localStorage.getItem('cart'));
+            }
+            cart.map((product, i) => {
+                if(product._id == c._id){
+                    cart[i].count = count;
+                }
+            });
+            localStorage.setItem('cart',JSON.stringify(cart));
+            dispatch({
+                type: "ADD_TO_CART",
+                payload: cart,
+            });
+        }
+    }
+    //remove the items
+    const handleRemove = (c) =>{
+        let cart = []
+        if(typeof window !== 'undefined')
+        {
+            if(localStorage.getItem('cart')){
+                cart = JSON.parse(localStorage.getItem('cart'));
+            }
+            cart.map((product, i) => {
+                if(product._id == c._id){
+                    cart.splice(i,1);
+                }
+            });
+            localStorage.setItem('cart',JSON.stringify(cart));
+            dispatch({
+                type: "ADD_TO_CART",
+                payload: cart,
+            });
+        }
+    }
     //show cart items
     const showCartItems = () =>(
         <>
@@ -79,15 +136,17 @@ const Cart = () =>{
                     </>
                 )}
                 <Row className="mt-2" justify="space-between">
-                    <Col span={8}>Quanitity</Col>
                     <Col span={8}>
-                        <Link to="/shop"><h6 style={{color:"blue"}}>REMOVE</h6></Link>
+                        <input type="number" className="form-control" value={c.count} onChange={(e)=>handleQuantityChange(e, c)} />
+                    </Col>
+                    <Col span={8}>
+                        <h6 style={{color:"blue", "cursor":"pointer"}} onClick={() => handleRemove(c)}>REMOVE</h6>
                     </Col>
                 </Row>
             </Col>
 
             <Col className="mt-5" span={6}>
-                <p style={{fontSize:"14px"}}> Delivery in {Math.floor(Math.random() * 10)} days | {c.delivery ? (
+                <p style={{fontSize:"14px"}}> Delivery Available | {c.delivery ? (
                     <>
                         <span>Rs. {c.delivery}</span>
                     </>
