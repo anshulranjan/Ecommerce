@@ -32,6 +32,7 @@ import Shop from './components/search/Shop';
 import Cart from './pages/Cart';
 import ShowSubCategoryProduct from './components/search/ShowSubCategoryProduct';
 import ShowCategoryProduct from './components/search/ShowCategoryProduct';
+import SideDrawer from './components/drawer/sideDrawer';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -65,6 +66,7 @@ const App = () => {
   return (
     <>
     <Header />
+    <SideDrawer />
     <ToastContainer
       position="top-right"
       autoClose={5000}

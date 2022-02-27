@@ -93,12 +93,17 @@ export const SingleProduct = ({product}) => {
             //remove duplicates
             let unique = _.uniqWith(cart, _.isEqual)
             localStorage.setItem('cart',JSON.stringify(unique));
+
             //add to redux state
             dispatch({
                 type:"ADD_TO_CART",
                 payload: unique,
             })
-
+            //show cart item to drawer
+            dispatch({
+                type:"SET_VISIBLE",
+                payload: true,
+            })
             setProductincart(true);
         }
     }

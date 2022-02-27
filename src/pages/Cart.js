@@ -24,7 +24,7 @@ const Cart = () =>{
         cart.map((c,i) => {
             if(c.discount)
             {
-                discount = discount + c.discount
+                discount = discount + c.discount * c.count
             }
         })
         return discount;
@@ -35,7 +35,7 @@ const Cart = () =>{
         cart.map((c,i) => {
             if(c.delivery)
             {
-                delivery = delivery + c.delivery
+                delivery = delivery + c.delivery * c.count
             }
         })
         return delivery;
@@ -173,7 +173,7 @@ const Cart = () =>{
 
     }
     return(
-        <div className="container-fluid" style={{backgroundColor:"#eee", width:"100%", height:"100vh"}}>
+        <div className="container-fluid" style={{backgroundColor:"#eee", width:"100%", height:"100%"}}>
             {!cart.length ? (
                 <>
                     <div className="p-2">
