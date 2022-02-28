@@ -74,6 +74,16 @@ export const SingleProduct = ({product}) => {
     const calculateDiscountRate = (c, d) =>{
         return Number(((d/c)*100).toFixed(0));
     }
+    //indian format number display
+    const displayIndianFormat = (x) =>{
+        x=x.toString();
+        var lastThree = x.substring(x.length-3);
+        var otherNumbers = x.substring(0,x.length-3);
+        if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+        var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+        return res;
+    }
     //star ratings
     const updateRating = (value) =>{
         console.log(value);
@@ -128,13 +138,13 @@ export const SingleProduct = ({product}) => {
                 <HeartFilled style={{fontSize:"40px" , color:"grey"}} className="p-2"/>
                 {product.discount ? (
                     <div className="mt-1" style={{fontFamily:"sans-serif", fontSize:"30px", fontWeight:"bold"}}>
-                     ₹{product.price - product.discount}
-                     <span className="ml-1" style={{color:"grey", fontSize:"22px"}}> <strike>₹{product.price}</strike> </span>
+                     ₹{displayIndianFormat(product.price - product.discount)}
+                     <span className="ml-1" style={{color:"grey", fontSize:"22px"}}> <strike>₹{displayIndianFormat(product.price)}</strike> </span>
                      <span className="ml-2" style={{color:"green", fontSize:"20px", fontWeight:"bolder"}}> {calculateDiscountRate(product.price, product.discount)}% off</span>
                     </div>
                 ): (
                     <div className="mt-1" style={{fontFamily:"sans-serif", fontSize:"30px", fontWeight:"bold"}}>
-                        ₹{product.price}
+                        ₹{displayIndianFormat(product.price)}
                     </div>
 
                 )}

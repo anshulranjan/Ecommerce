@@ -49,6 +49,16 @@ const Cart = () =>{
     const calculateDiscountRate = (c, d) =>{
         return Number(((d/c)*100).toFixed(0));
     }
+    //indian format number display
+    const displayIndianFormat = (x) =>{
+        x=x.toString();
+        var lastThree = x.substring(x.length-3);
+        var otherNumbers = x.substring(0,x.length-3);
+        if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+        var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+        return res;
+    }
 
     //handle quantity change
     const handleQuantityChange = (e, c) => {
@@ -134,14 +144,14 @@ const Cart = () =>{
                 {c.discount ? (
                     <>
                         
-                        <b style={{fontFamily:"sans-serif", fontSize:"18px"}} >₹{c.price - c.discount}</b>
-                        <span className="ml-1" style={{color:"grey", fontSize:"14px"}}> <strike>₹{c.price}</strike> </span>
+                        <b style={{fontFamily:"sans-serif", fontSize:"18px"}} >₹{displayIndianFormat(c.price - c.discount)}</b>
+                        <span className="ml-1" style={{color:"grey", fontSize:"14px"}}> <strike>₹{displayIndianFormat(c.price)}</strike> </span>
                         <span className="ml-2" style={{color:"green", fontSize:"14px", fontWeight:"bolder"}}> {calculateDiscountRate(c.price, c.discount)}% off</span>
                     </>
                 ) : (
                     <>
                         <div style={{fontFamily:"sans-serif", fontSize:"18px"}}>
-                        <b>₹{c.price}</b></div>
+                        <b>₹{displayIndianFormat(c.price)}</b></div>
                     </>
                 )}
                 <Row className="mt-2" justify="space-between">
@@ -157,7 +167,7 @@ const Cart = () =>{
             <Col className="mt-5" span={6}>
                 <p style={{fontSize:"14px"}}> Delivery Available | {c.delivery ? (
                     <>
-                        <span>₹{c.delivery}</span>
+                        <span>₹{displayIndianFormat(c.delivery)}</span>
                     </>
                 ) : (
                     <span style={{color:"green", fontSize:"14px", fontWeight:"bolder"}}> FREE</span>
@@ -206,15 +216,15 @@ const Cart = () =>{
                             <Row>
                                 
                                 <Col span={8}><p style={{fontSize:"16px"}}> Price {cart.length === 1 ? (<> ({cart.length} item)</>) : (<> ({cart.length} items)</>)} </p></Col>
-                                <Col span={8} offset={8}><p style={{fontSize:"16px"}}> ₹{getTotalCartValue()}</p></Col>
+                                <Col span={8} offset={8}><p style={{fontSize:"16px"}}> ₹{displayIndianFormat(getTotalCartValue())}</p></Col>
                                 <Col span={8}><p style={{fontSize:"16px"}}>Discount </p> </Col>
-                                <Col span={8} offset={8}> <p style={{fontSize:"16px", color:"green"}}> - ₹{getDiscountValue()} </p></Col>
+                                <Col span={8} offset={8}> <p style={{fontSize:"16px", color:"green"}}> - ₹{displayIndianFormat(getDiscountValue())} </p></Col>
                                 <Col span={8}><p style={{fontSize:"16px"}}> Delivery Charges </p></Col>
                                 <Col span={8} offset={8}>{getDeliveryCharge() === 0 ? (<><p style={{fontSize:"16px", color:"green"}}> FREE</p></>) : (<>
                                     <p style={{fontSize:"16px"}}> +  ₹{getDeliveryCharge()} </p></>
                                 )}</Col>
                                 <Col span={8}><h3 className="pt-2" style={{fontSize:"20px"}}>Total Amount </h3> </Col>
-                                <Col span={8} offset={8}> <h3 className="pt-2" style={{fontSize:"20px"}}> ₹{getTotalAmount()} </h3></Col>
+                                <Col span={8} offset={8}> <h3 className="pt-2" style={{fontSize:"20px"}}> ₹{displayIndianFormat(getTotalAmount())} </h3></Col>
 
 
                                 {user ? (
