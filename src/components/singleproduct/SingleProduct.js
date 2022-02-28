@@ -70,7 +70,10 @@ export const SingleProduct = ({product}) => {
             });
         }
     };
-
+    //calculate discount rate
+    const calculateDiscountRate = (c, d) =>{
+        return Number(((d/c)*100).toFixed(0));
+    }
     //star ratings
     const updateRating = (value) =>{
         console.log(value);
@@ -123,7 +126,18 @@ export const SingleProduct = ({product}) => {
                 <div className="mt-2" style={{color: "#bfbfbf" ,fontSize:"16px",fontWeight:"bold"}}>{product.brand.name.toUpperCase()}</div>
                 <div style={{fontFamily:"sans-serif", fontSize:"22px", fontWeight:"inherit"}} className="mt-1">{product.title}</div>
                 <HeartFilled style={{fontSize:"40px" , color:"grey"}} className="p-2"/>
-                <div className="mt-1" style={{fontFamily:"sans-serif", fontSize:"30px", fontWeight:"bold"}}>Rs. {product.price}</div>
+                {product.discount ? (
+                    <div className="mt-1" style={{fontFamily:"sans-serif", fontSize:"30px", fontWeight:"bold"}}>
+                     ₹{product.price - product.discount}
+                     <span className="ml-1" style={{color:"grey", fontSize:"22px"}}> <strike>₹{product.price}</strike> </span>
+                     <span className="ml-2" style={{color:"green", fontSize:"20px", fontWeight:"bolder"}}> {calculateDiscountRate(product.price, product.discount)}% off</span>
+                    </div>
+                ): (
+                    <div className="mt-1" style={{fontFamily:"sans-serif", fontSize:"30px", fontWeight:"bold"}}>
+                        ₹{product.price}
+                    </div>
+
+                )}
                 <div className="mt-1" >
                     <Rate defaultValue={0} allowClear={false} disabled onChange={(value) => updateRating(value)}/>
                     <br />
