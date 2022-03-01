@@ -221,7 +221,7 @@ const Cart = () =>{
                                 <Col span={8} offset={8}> <p style={{fontSize:"16px", color:"green"}}> - ₹{displayIndianFormat(getDiscountValue())} </p></Col>
                                 <Col span={8}><p style={{fontSize:"16px"}}> Delivery Charges </p></Col>
                                 <Col span={8} offset={8}>{getDeliveryCharge() === 0 ? (<><p style={{fontSize:"16px", color:"green"}}> FREE</p></>) : (<>
-                                    <p style={{fontSize:"16px"}}> +  ₹{getDeliveryCharge()} </p></>
+                                    <p style={{fontSize:"16px"}}> +  ₹{displayIndianFormat(getDeliveryCharge())} </p></>
                                 )}</Col>
                                 <Col span={8}><h3 className="pt-2" style={{fontSize:"20px"}}>Total Amount </h3> </Col>
                                 <Col span={8} offset={8}> <h3 className="pt-2" style={{fontSize:"20px"}}> ₹{displayIndianFormat(getTotalAmount())} </h3></Col>
