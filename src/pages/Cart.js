@@ -5,10 +5,11 @@ import cartimage from "./cartImage.png";
 import { Card, Row, Col, Typography, Button } from 'antd';
 import ModalImage from 'react-modal-image';
 import {toast} from "react-toastify";
+import { userCart } from "../functions/user";
 
 const { Title } = Typography;
 
-const Cart = () =>{
+const Cart = ({history}) =>{
     const {cart, user} = useSelector((state) => ({...state}))
     const dispatch = useDispatch();
 
@@ -84,7 +85,7 @@ const Cart = () =>{
             }
             cart.map((product, i) => {
                 if(product._id == c._id){
-                    cart[i].count = count;
+                    cart[i].count = parseInt(count);
                 }
             });
             localStorage.setItem('cart',JSON.stringify(cart));
@@ -180,7 +181,16 @@ const Cart = () =>{
     )
     //save order to db
     const saveOrderToDb = () => {
-
+        //check if asked quantity is available at time of checkout
+        console.log(cart);
+        userCart(cart,user.token)
+        .then(res => {
+            console.log(res);
+            if (res.data.ok)
+            {
+                history.push("/checkout")
+            }
+        }).catch(err => console.log('cart save error',err))
     }
     return(
         <div className="container-fluid" style={{backgroundColor:"#eee", width:"100%", height:"100%"}}>
