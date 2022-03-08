@@ -108,7 +108,6 @@ const ProductCreate = () => {
        setWait(true);
        createProduct({values, color, shipping, delivery, discount, category, gender, brand},user.token)
        .then(res=>{
-           console.log(res)
            setWait(false);
            window.alert(`${res.data.title} is created`);
            window.location.reload();

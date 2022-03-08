@@ -1,18 +1,17 @@
 import React, {useEffect, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import cartimage from "./cartImage.png";
 import { Card, Row, Col, Typography, Button } from 'antd';
 import ModalImage from 'react-modal-image';
 import {toast} from "react-toastify";
 import { userCart } from "../functions/user";
-
+import { getProduct } from "../functions/product";
 const { Title } = Typography;
 
 const Cart = ({history}) =>{
     const {cart, user} = useSelector((state) => ({...state}))
     const dispatch = useDispatch();
-
     //total cost of items calculations
     const getTotalCartValue = () => {
         return cart.reduce((currentValue, nextValue) => {
@@ -60,9 +59,34 @@ const Cart = ({history}) =>{
         var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
         return res;
     }
+    //Cart Details update from db
+    const CartDetailsFromDb = () => {
+        let cart = [];
+        if(typeof window !== 'undefined')
+        {
+            if(localStorage.getItem('cart')){
+                cart = JSON.parse(localStorage.getItem('cart'));
+            }
+            cart.map((product, i) => {
+                getProduct(product.slug)
+                .then(res => {
+                    let count = cart[i].count;
+                    cart[i] = res.data;
+                    cart[i].count = count;
+                })
+            });
+            setTimeout (() =>{
+                localStorage.setItem('cart',JSON.stringify(cart));
+                dispatch({
+                    type: "ADD_TO_CART",
+                    payload: cart,
+                });
+            }, 2000)
+        }
+    }
 
     //handle quantity change
-    const handleQuantityChange = (e, c) => {
+    const handleQuantityChange = (e, c, cart) => {
         let count = e.target.value < 1 ? 1 : e.target.value
         if(count>c.quantity)
         {
@@ -77,24 +101,25 @@ const Cart = ({history}) =>{
             });
             return;
         }
-        let cart = []
+        let cart1 = []
         if(typeof window !== 'undefined')
         {
             if(localStorage.getItem('cart')){
-                cart = JSON.parse(localStorage.getItem('cart'));
+                cart1 = JSON.parse(localStorage.getItem('cart'));
             }
-            cart.map((product, i) => {
+            cart1.map((product, i) => {
                 if(product._id == c._id){
-                    cart[i].count = parseInt(count);
+                    cart1[i].count = parseInt(count);
                 }
             });
-            localStorage.setItem('cart',JSON.stringify(cart));
+            localStorage.setItem('cart',JSON.stringify(cart1));
             dispatch({
                 type: "ADD_TO_CART",
-                payload: cart,
+                payload: cart1,
             });
         }
     }
+    
     //remove the items
     const handleRemove = (c) =>{
         let cart = []
@@ -122,6 +147,69 @@ const Cart = ({history}) =>{
                 draggable: true,
                 progress: undefined,
             });
+        }
+    }
+    //check if asked quantity is available at time of checkout
+    const checkQuantity = () =>{
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                var value = 0;
+                cart.map((c,i) =>{ 
+                    getProduct(c.slug)
+                    .then(res=>{
+                        if(res.data.quantity === 0)
+                        {
+                            toast.error(`Sorry, ${res.data.title.substring(0,60)}... is out of stock. Kindly remove this product and proceed again`, {
+                                position: "top-right",
+                                autoClose: 10000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                            value = 1;
+                            resolve(1);
+                        }
+                        else if(c.count>res.data.quantity)
+                        {
+                            toast.error(`Sorry, Only ${res.data.quantity} quantity available for ${res.data.title.substring(0,60)}... Kindly Update your quantity`, {
+                                position: "top-right",
+                                autoClose: 10000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                            value = 1
+                            resolve(1);
+                        }
+                        else if(i == cart.length - 1 && value ==0)
+                        {
+                            resolve(0);
+                        }
+                    })
+                })
+            }, 1000)
+        })
+    }
+    //save order to db
+    const saveOrderToDb =  async () => {
+        if (await checkQuantity() == 1){
+            CartDetailsFromDb();
+            return;
+        }
+        else{
+            console.log("Hello")
+            userCart(cart,user.token)
+            .then(res => {
+                console.log(res);
+                if (res.data.ok)
+                {
+                    history.push("/checkout")
+                }
+            }).catch(err => console.log('cart save error',err))
         }
     }
     //show cart items
@@ -157,7 +245,18 @@ const Cart = ({history}) =>{
                 )}
                 <Row className="mt-2" justify="space-between">
                     <Col span={8}>
-                        <input type="number" className="form-control" value={c.count} onChange={(e)=>handleQuantityChange(e, c)} />
+                        {c.quantity < 1 ? (
+                            <>
+                                <p style={{"color":"red"}}>This Product is Out Of Stock.</p>
+                            </>
+
+                        ) :(
+                            <>
+                            <input type="number" className="form-control" value={c.count} onChange={(e)=>handleQuantityChange(e, c, cart)} />
+                            </>
+                        ) }
+                        
+                        
                     </Col>
                     <Col span={8}>
                         <h6 style={{color:"blue", "cursor":"pointer"}} onClick={() => handleRemove(c)}>REMOVE</h6>
@@ -179,21 +278,8 @@ const Cart = ({history}) =>{
         }
         </>
     )
-    //save order to db
-    const saveOrderToDb = () => {
-        //check if asked quantity is available at time of checkout
-        console.log(cart);
-        userCart(cart,user.token)
-        .then(res => {
-            console.log(res);
-            if (res.data.ok)
-            {
-                history.push("/checkout")
-            }
-        }).catch(err => console.log('cart save error',err))
-    }
     return(
-        <div className="container-fluid" style={{backgroundColor:"#eee", width:"100%", height:"100%"}}>
+        <div className="container-fluid" style={{backgroundColor:"#eee", width:"100%", minHeight:"100vh"}}>
             {!cart.length ? (
                 <>
                     <div className="p-2">
@@ -210,6 +296,7 @@ const Cart = ({history}) =>{
                     </div>
                 </>
             ): (
+            <>
             <div className="row">
                 <div className="col-md-8">
                     <div className="pt-2 pl-2 pb-2">
@@ -255,6 +342,7 @@ const Cart = ({history}) =>{
                     </div>
                 </div>
             </div>
+            </>
             )}
         </div>
     )
