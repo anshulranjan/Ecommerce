@@ -201,10 +201,8 @@ const Cart = ({history}) =>{
             return;
         }
         else{
-            console.log("Hello")
             userCart(cart,user.token)
             .then(res => {
-                console.log(res);
                 if (res.data.ok)
                 {
                     history.push("/checkout")
