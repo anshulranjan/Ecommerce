@@ -11,6 +11,8 @@ import ImgCrop from 'antd-img-crop';
 import axios from "axios";
 import Resizer from "react-image-file-resizer";
 import { getSubBrand } from "../../../functions/subcategory";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const initState = {
     
@@ -217,8 +219,8 @@ const ProductUpdate = ({match, history}) => {
     const handleChangeName = (e) => {
         setTitle(e.target.value);
     };
-    const handleChangeDes = (e) => {
-        setDes(e.target.value);
+    const handleChangeDes = (value) => {
+        setDes(value);
     };
     const handleChangePrice = (e) => {
         setPrice(e.target.value);
@@ -315,12 +317,13 @@ const ProductUpdate = ({match, history}) => {
 
             <Form.Item
                 label="Description"
+                initialValue=''
                 rules={[{ required: true,  whitespace: true }]}
                 className="ml-5"
                 
             >
-            <TextArea name="description" rows={6} placeholder="Enter the Product description" value={description}
-                onChange = {handleChangeDes} style={{whiteSpace: "pre-wrap"}} />
+            <ReactQuill name="description" placeholder="Enter the Product description" theme="snow" value={description} 
+            onChange = {handleChangeDes} style={{whiteSpace: "pre-wrap"}} />
             </Form.Item>
 
 

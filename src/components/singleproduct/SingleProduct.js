@@ -234,7 +234,7 @@ export const SingleProduct = ({product}) => {
             <div className ="container fluid mb-2">
             <Collapse defaultActiveKey={['1']}>
                 <Panel header="Product Description" key="1">
-                    <p style={{whiteSpace:"pre-line"}}>{product.description}</p>
+                    <p dangerouslySetInnerHTML={{__html: product.description}}></p>
                 </Panel>
             </Collapse>
             </div>

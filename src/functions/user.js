@@ -16,7 +16,15 @@ export const getUserCart = async(authtoken) =>{
 };
 
 export const emptyUserCart = async(authtoken) =>{
-    return await axios.put(`${process.env.REACT_APP_API}/user/cart`, {
+    return await axios.delete(`${process.env.REACT_APP_API}/user/cart`, {
+        headers:{
+            authtoken,
+        }
+    });
+};
+
+export const saveUserAddress = async (address, authtoken) => {
+    return await axios.post(`${process.env.REACT_APP_API}/user/address`, {address}, {
         headers:{
             authtoken,
         }

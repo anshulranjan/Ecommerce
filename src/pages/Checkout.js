@@ -2,7 +2,9 @@ import React, {useEffect, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { Card, Row, Col, Typography, Button } from 'antd';
-import {getUserCart} from "../functions/user"
+import {getUserCart, saveUserAddress} from "../functions/user"
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 const { Title } = Typography;
 
 const Checkout = () =>{
@@ -11,6 +13,7 @@ const Checkout = () =>{
     const [cartTotal, setCartTotal] = useState(0);
     const [delivery, setDelivery] = useState(0)
     const [discount, setDiscount] = useState(0)
+    const [address, setAddress] = useState("")
     const dispatch = useDispatch();
     useEffect(() => {
         getUserCart(user.token)
@@ -37,14 +40,22 @@ const Checkout = () =>{
     const paymentOption = () => {
         
     }
+    //save address
+    const saveAddressToDb = () =>{
+        console.log(address)
+    }
     return(
         <div className="container-fluid" style={{backgroundColor:"#eee", width:"100%", minHeight:"100vh"}}>
             <div className="row">
                 <div className="col-md-8">
                     <div className="pt-2 pl-2 pb-2">
-                        <Card title={<Title level={4}>My  Cart ({cart.length})</Title>} bordered={false} style={{ width: "100%" }}>
+                        <Card title={<Title level={4}>Delivery Address</Title>} bordered={false} style={{ width: "100%", minHeight:"50vh"}}>
                             <Row>
-                                Hello
+                                <ReactQuill theme="snow" value={address} onChange={(e) => setAddress(e.target.value)} />
+                                <br />
+                                <button className="btn btn-primary mt-2" onClick={saveAddressToDb}>
+                                    Save
+                                </button>
                             </Row>
                         </Card>
                     </div>

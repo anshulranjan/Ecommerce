@@ -11,10 +11,11 @@ import ImgCrop from 'antd-img-crop';
 import axios from "axios";
 import Resizer from "react-image-file-resizer";
 import { getSubBrand } from "../../../functions/subcategory";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const initState = {
     title:'',
-    description:'',
     price:'',
     images:[],
     categories:[],
@@ -35,11 +36,12 @@ const formItemLayout = {
 
 const ProductCreate = () => {
     const [values, setValues] = useState(initState);
-    const {title, images, description, price, delivery, discount, categories, subcategory, quantity, colors} = values;
+    const {title, images, price, delivery, discount, categories, subcategory, quantity, colors} = values;
     const [wait, setWait] = useState(false);
     const { TextArea } = Input;
     const { Option } = Select;
     const [color, setColor] = useState("");
+    const [description, setDescription] = useState("")
     const [category, setCategory] = useState("");
     const [brand, setBrand] = useState("");
     const [gender, setGender] = useState("");
@@ -106,7 +108,7 @@ const ProductCreate = () => {
 
        }
        setWait(true);
-       createProduct({values, color, shipping, delivery, discount, category, gender, brand},user.token)
+       createProduct({values, description, color, shipping, delivery, discount, category, gender, brand},user.token)
        .then(res=>{
            setWait(false);
            window.alert(`${res.data.title} is created`);
@@ -175,6 +177,9 @@ const ProductCreate = () => {
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
+    const onSelectDescription = (value) => {
+        setDescription(value);
+    }
     const onSelectColor = (value) => {
         setColor(value);
     }
@@ -258,13 +263,14 @@ const ProductCreate = () => {
 
             <Form.Item
                 name="description"
+                initialValue=''
                 label="Description"
-                rules={[{ required: true,  whitespace: true }]}
+                rules={[{whitespace: true }]}
                 className="ml-5"
                 
             >
-            <TextArea name="description" rows={6} placeholder="Enter the Product description" value={description}
-                onChange = {handleChange} style={{whiteSpace: "pre-wrap"}}/>
+            <ReactQuill name="description" placeholder="Enter the Product description" theme="snow" value={description} 
+            onChange = {onSelectDescription} style={{whiteSpace: "pre-wrap"}} />
             </Form.Item>
 
 
