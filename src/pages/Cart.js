@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import cartimage from "./cartImage.png";
+import {LoadingOutlined} from '@ant-design/icons';
+
 import { Card, Row, Col, Typography, Button } from 'antd';
 import ModalImage from 'react-modal-image';
 import {toast} from "react-toastify";
@@ -11,6 +13,7 @@ const { Title } = Typography;
 
 const Cart = ({history}) =>{
     const {cart, user} = useSelector((state) => ({...state}))
+    const [wait, setWait] = useState(false)
     const dispatch = useDispatch();
     //total cost of items calculations
     const getTotalCartValue = () => {
@@ -196,8 +199,10 @@ const Cart = ({history}) =>{
     }
     //save order to db
     const saveOrderToDb =  async () => {
+        setWait(true)
         if (await checkQuantity() == 1){
             CartDetailsFromDb();
+            setWait(false)
             return;
         }
         else{
@@ -205,6 +210,7 @@ const Cart = ({history}) =>{
             .then(res => {
                 if (res.data.ok)
                 {
+                    setWait(false)
                     history.push("/checkout")
                 }
             }).catch(err => console.log('cart save error',err))
@@ -323,8 +329,19 @@ const Cart = ({history}) =>{
 
 
                                 {user ? (
-                                    <Col span={12}> <Button onClick={saveOrderToDb} disabled={!cart.length} className="mt-4" type="primary">
-                                        Proceed to Checkout</Button> 
+                                    <Col span={12}>
+                                        {!wait && (<Button onClick={saveOrderToDb} disabled={!cart.length} className="mt-4" type="primary">
+                                        Proceed to Checkout
+                                        </Button> )}
+                                        {wait && (
+                                            <Button 
+                                            type="light"
+                                            className = "mt-4"
+                                            icon = {<LoadingOutlined />}
+                                        >
+                                        Please Wait...</Button>
+                                        )}
+
                                     </Col>                            
                                 )
                                 : (

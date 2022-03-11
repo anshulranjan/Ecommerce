@@ -30,3 +30,11 @@ export const saveUserAddress = async (address, authtoken) => {
         }
     });
 };
+
+export const getAddress = async(authtoken) =>{
+    return await axios.get(`${process.env.REACT_APP_API}/user/address`, {
+        headers:{
+            authtoken,
+        }
+    });
+};
