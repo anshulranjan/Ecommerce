@@ -97,9 +97,9 @@ const Checkout = () =>{
             setdeliveredButtonClicked(false);
             return;
         }
-        if(street2.includes(",") || street1.includes(",") || landmark.includes(",") || pincode.includes(",") || city.includes(",") || state.includes(","))
+        if(street2.includes("^") || street1.includes("^") || landmark.includes("^") || pincode.includes("^") || city.includes("^") || state.includes("^"))
         {
-            toast.error("Donot type , to the address fields.", {
+            toast.error(" ^ character is invalid for address", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -111,7 +111,7 @@ const Checkout = () =>{
             setdeliveredButtonClicked(false);
             return;
         }
-        setAddress(street1+ "," + street2+","+ landmark+","+ city+","+state+","+pincode)
+        setAddress(street1+ "^" + street2+"^"+ landmark+"^"+ city+"^"+state+"^"+pincode)
         setSavetodb(true)
     }
     //detect location
@@ -189,7 +189,7 @@ const Checkout = () =>{
     }
     //parse address 
     const parseAddress = (address) => {
-        var splittedAddress = address.split(",")
+        var splittedAddress = address.split("^")
         setStreet1(splittedAddress[0])
         setStreet2(splittedAddress[1])
         setLandmark(splittedAddress[2])
