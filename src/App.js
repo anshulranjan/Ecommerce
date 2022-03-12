@@ -27,6 +27,7 @@ import BrandCreaate from './pages/admin/brand/BrandCreate';
 import BrandUpdate from './pages/admin/brand/BrandUpdate';
 import ProductList from './pages/admin/product/ProductList';
 import ProductUpdate from './pages/admin/product/ProductUpdate';
+import CouponCreate from './pages/admin/coupon/CouponCreate';
 import Product from './pages/Product';
 import Shop from './components/search/Shop';
 import Cart from './pages/Cart';
@@ -104,6 +105,7 @@ const App = () => {
       <AdminRoute exact path="/admin/subcategory/:slug" component={SubCategoryUpdate}></AdminRoute>
       <AdminRoute exact path="/admin/brand/:id" component={BrandUpdate}></AdminRoute>
       <AdminRoute exact path="/admin/product/:slug" component={ProductUpdate}></AdminRoute>
+      <AdminRoute exact path="/admin/coupon/" component={CouponCreate}></AdminRoute>
 
 
     </Switch>
