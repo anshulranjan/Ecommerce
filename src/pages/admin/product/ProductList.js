@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import AdminNav from "../../../components/nav/AdminNav";
 import { getProductsByCount, removeProduct } from "../../../functions/product";
-import { Card, Skeleton, Image } from 'antd';
+import { Input, Card, Skeleton, Image } from 'antd';
 import { Link } from "react-router-dom";
 import { EditOutlined, DeleteOutlined, SettingOutlined } from '@ant-design/icons';
 import {toast} from "react-toastify";
@@ -12,6 +12,7 @@ const { Meta } = Card;
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState("");
     const arr = new Array(21);
     const {user} = useSelector((state) => ({...state}));
     var elements=[];
@@ -38,6 +39,12 @@ const ProductList = () => {
                 }
         })
     }
+    //search products
+    const handleSearchChange = (e) => {
+        e.preventDefault();
+        setSearch(e.target.value.toLowerCase());
+    }
+    const searched = (search) => (c) => c.name.toLowerCase().includes(search);
 
     //remove product
     const handleRemove = async (slug) => {
@@ -92,6 +99,11 @@ const ProductList = () => {
             </div>
             );
     }
+    const searchProduct = () =>(
+        <>
+            <Input className="mt-3 mb-3" autoFocus value={search} onChange={handleSearchChange} placeholder="Search Products" style={{borderLeft:"0", borderRight:"0", borderTop:"0", borderWidth:"3px", width:"25%"}}/>
+        </>
+    )
     return(
         <div id="viewport">
             <AdminNav />
@@ -101,6 +113,9 @@ const ProductList = () => {
                 </div>
                 <div className="container">
                     <div className="row ml-5">
+                        {searchProduct()}
+                    </div>
+                    <div className="row mt-4">
                         {loading && elements}
                         {!loading && products.map((p) => (
                             <div className="col-md-4 mb-2" key={p._id}> 

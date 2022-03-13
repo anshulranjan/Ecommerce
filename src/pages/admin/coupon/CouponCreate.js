@@ -70,9 +70,9 @@ const CouponCreate = () => {
     //create coupon
     const handleSubmit = async(e) =>{
         e.preventDefault();
-        if (name.length<6 || name.length>=13)
+        if (name.length<6 || name.length>=16)
         {
-            toast.error('Coupon Name should be between 6 and 12 characters', {
+            toast.error('Coupon Name should be between 6 and 15 characters', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,

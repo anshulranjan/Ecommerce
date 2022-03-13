@@ -34,6 +34,10 @@ const Checkout = () =>{
     const [controlAPI, setControlAPI] = useState(false)
     const [parseOk, setParseOk] = useState(false)
     const [getAddressclicked, setgetAddressClicked] = useState(false);
+
+    //for coupons
+    const [coupon, setCoupon] = useState("")
+    const [checkCoupon, setCheckCoupon] = useState(false)
     const dispatch = useDispatch();
     useEffect(() => {
         if(!controlAPI){
@@ -114,6 +118,7 @@ const Checkout = () =>{
         setAddress(street1+ "^" + street2+"^"+ landmark+"^"+ city+"^"+state+"^"+pincode)
         setSavetodb(true)
     }
+
     //detect location
     const detectLocationFromPincode = value => {
         setPincodeSuccess(false);
@@ -142,10 +147,12 @@ const Checkout = () =>{
             });
         
     }
+
     //payment option
     const paymentOption = () => {
         
     }
+
     //save address
     const saveAddressToDb = () =>{
         saveUserAddress(address,user.token)
@@ -170,12 +177,14 @@ const Checkout = () =>{
             return;
         })
     }
+
     //update address button
     const handleUpdateAddress = (e) =>{
         e.preventDefault()
         setSaveAddressSuccess(false)
         setSavetodb(false)
     }
+
     //get address from db
     const getAddressfromDb = () => {
         setgetAddressClicked(true)
@@ -187,6 +196,7 @@ const Checkout = () =>{
             
         })
     }
+
     //parse address 
     const parseAddress = (address) => {
         var splittedAddress = address.split("^")
@@ -201,6 +211,16 @@ const Checkout = () =>{
         setPincodeError("")
         setParseOk(false)
 
+    }
+
+    //handleCouponSubmit
+    const handleCoupon = (value) => {
+        setCoupon(value)
+    }
+
+    const handleCouponSubmit = () => {
+        setCheckCoupon(true);
+        console.log(coupon)
     }
     return(
         <div className="container-fluid" style={{backgroundColor:"#eee", width:"100%", minHeight:"100vh"}}>
@@ -270,6 +290,34 @@ const Checkout = () =>{
                             {savetodb && saveAddressToDb()}
                             </Row>
                             </Form>
+                            
+                        </Card>
+                        </div>
+                        
+                        <div className="pt-2 pl-2 pb-2">
+                        <Card title={<Title level={4}>Have A Coupon?</Title>} bordered={false} style={{ width: "100%", minHeight:"50vh"}}>
+                            <Row>
+                                <Col offset={1} span={15}>
+                                    <Form.Item rules={[{ required: true }]}>
+                                    <Input placeholder="Enter Coupon" value={coupon} onChange={(e)=>handleCoupon(e.target.value)}/>
+                                    </Form.Item>
+                                </Col>
+                                
+                            </Row>
+                            <Row>
+                            <Col offset={1} span={18}>
+                            {!checkCoupon && (
+                                <>
+                                <Button disabled={!coupon.length} onClick={handleCouponSubmit} className="mt-4" type="primary">
+                                Apply Coupon</Button> 
+                                </>
+                            )}
+                            {checkCoupon && (
+                                <Button  className="mt-4" type="light" icon = {<LoadingOutlined />}>
+                                Please Wait..</Button> 
+                            )}
+                            </Col>
+                            </Row>
 
                                 
 
@@ -305,7 +353,7 @@ const Checkout = () =>{
                                     <p style={{fontSize:"16px"}}> +  ₹{displayIndianFormat(delivery)} </p></>
                                 )}</Col>
                                 <Col span={8}><h3 className="pt-2" style={{fontSize:"20px"}}>Total Amount </h3> </Col>
-                                <Col span={8} offset={8}> <h3 className="pt-2" style={{fontSize:"20px"}}> ₹{displayIndianFormat(cartTotal- discount)} </h3></Col>
+                                <Col span={8} offset={8}> <h3 className="pt-2" style={{fontSize:"20px"}}> ₹{displayIndianFormat(cartTotal- discount - delivery)} </h3></Col>
                                 {user ? (
                                     <>
                                     <Col span={12}> <Button disabled={!products.length || !saveAddressSuccess} className="mt-4" type="primary">
